@@ -11,9 +11,22 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
+@Table(
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "uk_external_game_plataform_id",
+            columnNames ={"Plataform","external_id"}
+        )
+    }
+)
 public class ExternalGameId {
+    void setGame(Game game) {
+    this.game = game;
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,6 +36,6 @@ public class ExternalGameId {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Plataform plataform;
-    @Column(nullable = false)
+    @Column(name = "external_id", nullable = false)
     private String externalId;
 }

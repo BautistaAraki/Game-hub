@@ -1,16 +1,33 @@
 package com.gamehub.gamehub.mode1;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
+import java.util.HashSet;
+import java.util.Set;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Column;
+
+
 @Entity
 public class Game {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name ;
-    @Column(unique=true)
-    private Long steamAppID;
+    @Column(nullable = false)
+    private String name;
+
     private String imageUrl;
+    @OneToMany(
+    mappedBy = "game",
+    cascade = CascadeType.ALL,
+    orphanRemoval = true
+)
+    private Set<ExternalGameId> externalIds = new HashSet<>();
+    public void addExternalID(ExternalGameId externalGameId){
+        externalIds.add(externalGameId);
+        externalGameId.setGame(this);
+    }
 }
