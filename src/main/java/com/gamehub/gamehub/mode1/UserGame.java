@@ -1,6 +1,9 @@
 package com.gamehub.gamehub.mode1;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,4 +32,53 @@ public class UserGame {
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "game_id",nullable = false)
     private Game game;
+    @Column
+    private Integer rating;
+    private Integer playtimeMinutes;
+    private boolean favorite;
+    protected UserGame() {
+    }   
+
+    public UserGame(User user, Game game) {
+        if (user == null || game == null) {
+            throw new IllegalArgumentException(
+                "El usuario y el juego son obligatorios"
+            );
+        }
+
+    this.user = user;
+    this.game = game;
+}
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private GameStatus status =GameStatus.BACKLOG;
+    public void setRating(Integer rating){
+        if (rating != null && (rating<1 || rating>10)){
+            throw new IllegalArgumentException("El rating debe entre 1 y 10");
+        }
+        this.rating = rating;
+    }
+    public void setplaytimeMinutes(Integer playtimeMinutes){
+        if (playtimeMinutes!=null && playtimeMinutes<0){
+            throw new IllegalArgumentException(
+                "El tiempo de juego no es correcto"
+            );
+        }
+        this.playtimeMinutes=playtimeMinutes;
+    }
+    public void changeStatus(GameStatus gameStatus) {
+    if (gameStatus == null) {
+        throw new IllegalArgumentException("El estado no puede ser null");
+    }
+
+    this.status = gameStatus;
+    }
+    public void markAsFavorite() {
+        this.favorite = true;
+    }
+
+    public void removeFromFavorites() {
+        this.favorite = false;
+    }
+
 }

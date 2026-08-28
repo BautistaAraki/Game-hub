@@ -18,8 +18,8 @@ import jakarta.persistence.UniqueConstraint;
 @Table(
     uniqueConstraints = {
         @UniqueConstraint(
-            name = "uk_external_game_plataform_id",
-            columnNames ={"Plataform","external_id"}
+            name = "uk_external_game_platform_id",
+            columnNames = {"platform", "external_id"}
         )
     }
 )
@@ -35,7 +35,7 @@ public class ExternalGameId {
     private Game game;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Plataform plataform;
+    private Platform platform;
     @Column(name = "external_id", nullable = false)
     private String externalId;
 }

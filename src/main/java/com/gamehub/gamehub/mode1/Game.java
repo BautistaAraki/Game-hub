@@ -20,6 +20,9 @@ public class Game {
     private String name;
 
     private String imageUrl;
+    public Long getId() {
+    return id;
+    }
     @OneToMany(
     mappedBy = "game",
     cascade = CascadeType.ALL,
