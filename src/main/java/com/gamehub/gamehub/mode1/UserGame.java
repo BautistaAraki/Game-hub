@@ -25,7 +25,7 @@ import jakarta.persistence.UniqueConstraint;
 public class UserGame {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name="user_id",nullable = false)
     private User user;
@@ -80,5 +80,32 @@ public class UserGame {
     public void removeFromFavorites() {
         this.favorite = false;
     }
+    public Long getId() {
+    return id;
+}
+
+public Long getUserId() {
+    return user.getId();
+}
+
+public Long getGameId() {
+    return game.getId();
+}
+
+public Integer getRating() {
+    return rating;
+}
+
+public Integer getPlaytimeMinutes() {
+    return playtimeMinutes;
+}
+
+public boolean isFavorite() {
+    return favorite;
+}
+
+public GameStatus getStatus() {
+    return status;
+}
 
 }
