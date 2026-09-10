@@ -115,7 +115,7 @@ public void removeGame(Long userGameId) {
 
     UserGame userGame = userGameRepository.findById(userGameId)
             .orElseThrow(() ->
-                    new IllegalArgumentException("Juego de biblioteca no encontrado")
+                    new ResourceNotFoundException("Juego de biblioteca no encontrado")
             );
 
     userGameRepository.delete(userGame);

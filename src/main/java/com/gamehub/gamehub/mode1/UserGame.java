@@ -54,7 +54,7 @@ public class UserGame {
     private GameStatus status =GameStatus.BACKLOG;
     public void setRating(Integer rating){
         if (rating != null && (rating<1 || rating>10)){
-            throw new IllegalArgumentException("El rating debe entre 1 y 10");
+            throw new IllegalArgumentException("El rating debe estar entre 1 y 10");
         }
         this.rating = rating;
     }
