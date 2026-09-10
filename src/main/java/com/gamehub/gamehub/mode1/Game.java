@@ -23,6 +23,15 @@ public class Game {
     public Long getId() {
     return id;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
     @OneToMany(
     mappedBy = "game",
     cascade = CascadeType.ALL,
