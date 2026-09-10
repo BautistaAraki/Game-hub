@@ -8,6 +8,7 @@ import com.gamehub.gamehub.repository.UserRepository;
 import com.gamehub.gamehub.repository.GameRepository; 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.gamehub.gamehub.DTO.UserGameResponse;
 import com.gamehub.gamehub.exception.GameAlreadyInLibraryException;
 import com.gamehub.gamehub.exception.ResourceNotFoundException;
@@ -22,6 +23,7 @@ public class UserGameService {
         this.userGameRepository = userGameRepository;
     }
 
+   @Transactional
    public UserGameResponse addGame(Long userId, Long gameId) {
 
     User user = userRepository.findById(userId)
@@ -44,12 +46,14 @@ public class UserGameService {
 
     return toResponse(savedUserGame);
 }
+    @Transactional(readOnly = true)
     public List<UserGameResponse> getLibrary(Long userId) {
     return userGameRepository.findByUser_Id(userId)
             .stream()
             .map(this::toResponse)
             .toList();
     }
+   @Transactional
    public UserGameResponse updateRating(Long userGameId, Integer rating) {
 
     UserGame userGame = userGameRepository.findById(userGameId)
@@ -65,6 +69,7 @@ public class UserGameService {
 
     return toResponse(savedUserGame);
     }
+    @Transactional
     public UserGameResponse updateStatus(Long userGameId, GameStatus status) {
 
     UserGame userGame = userGameRepository.findById(userGameId)
@@ -80,6 +85,7 @@ public class UserGameService {
 
     return toResponse(savedUserGame);
 }
+@Transactional
 public UserGameResponse addToFavorites(Long userGameId) {
 
     UserGame userGame = userGameRepository.findById(userGameId)
@@ -96,6 +102,7 @@ public UserGameResponse addToFavorites(Long userGameId) {
     return toResponse(savedUserGame);
 }
 
+@Transactional
 public UserGameResponse removeFromFavorites(Long userGameId) {
 
     UserGame userGame = userGameRepository.findById(userGameId)
@@ -111,6 +118,7 @@ public UserGameResponse removeFromFavorites(Long userGameId) {
 
     return toResponse(savedUserGame);
 }
+@Transactional
 public void removeGame(Long userGameId) {
 
     UserGame userGame = userGameRepository.findById(userGameId)
