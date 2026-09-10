@@ -1,8 +1,11 @@
 package com.gamehub.gamehub.controller;
+import com.gamehub.gamehub.DTO.AddGameToLibraryRequest;
 import com.gamehub.gamehub.service.UserGameService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.gamehub.gamehub.DTO.UserGameResponse;
@@ -27,10 +30,9 @@ public List<UserGameResponse> getLibrary(
 }
     @PostMapping
     public UserGameResponse addGame(
-        @RequestParam Long userId,
-        @RequestParam Long gameId
+        @Valid @RequestBody AddGameToLibraryRequest request
     ){
-        return userGameService.addGame(userId, gameId);
+        return userGameService.addGame(request.userId(), request.gameId());
     }
     @PatchMapping("/{userGameId}/rating")
     public UserGameResponse updateRating(
