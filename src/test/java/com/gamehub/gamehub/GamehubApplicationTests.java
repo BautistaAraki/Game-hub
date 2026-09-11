@@ -1,13 +1,14 @@
 package com.gamehub.gamehub;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-@SpringBootTest
+import org.junit.jupiter.api.Test;
+
 class GamehubApplicationTests {
 
 	@Test
-	void contextLoads() {
+	void applicationCanBeInstantiated() {
+		assertDoesNotThrow(GamehubApplication::new);
 	}
 
 }
