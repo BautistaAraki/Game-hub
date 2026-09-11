@@ -20,6 +20,19 @@ public class Game {
     private String name;
 
     private String imageUrl;
+
+    protected Game() {
+    }
+
+    public Game(String name, String imageUrl) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("El nombre del juego es obligatorio");
+        }
+
+        this.name = name;
+        this.imageUrl = imageUrl;
+    }
+
     public Long getId() {
     return id;
     }

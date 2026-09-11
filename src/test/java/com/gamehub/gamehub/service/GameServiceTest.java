@@ -56,10 +56,8 @@ class GameServiceTest {
     }
 
     private Game game(Long id, String name, String imageUrl) {
-        Game game = new Game();
+        Game game = new Game(name, imageUrl);
         ReflectionTestUtils.setField(game, "id", id);
-        ReflectionTestUtils.setField(game, "name", name);
-        ReflectionTestUtils.setField(game, "imageUrl", imageUrl);
         return game;
     }
 }

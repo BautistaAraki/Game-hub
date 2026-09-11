@@ -37,6 +37,15 @@ public class GlobalExceptionHandler {
                 .body(exception.getMessage());
     }
 
+    @ExceptionHandler(ExternalAccountAlreadyLinkedException.class)
+    public ResponseEntity<String> handleExternalAccountAlreadyLinked(
+            ExternalAccountAlreadyLinkedException exception
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(exception.getMessage());
+    }
+
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<String> handleInvalidCredentials(
             InvalidCredentialsException exception

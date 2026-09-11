@@ -32,7 +32,7 @@ class UserGameServiceTest {
     void updateRatingRejectsInvalidRatingAndDoesNotSave() {
         UserGame userGame = new UserGame(
                 new User("bauti", "bauti@example.com", "hash"),
-                new Game()
+                new Game("Minecraft", "https://example.com/minecraft.jpg")
         );
 
         when(userGameRepository.findById(2L)).thenReturn(Optional.of(userGame));
@@ -51,7 +51,7 @@ class UserGameServiceTest {
         when(userRepository.findById(1L))
                 .thenReturn(Optional.of(new User("bauti", "bauti@example.com", "hash")));
         when(gameRepository.findById(1L))
-                .thenReturn(Optional.of(new Game()));
+                .thenReturn(Optional.of(new Game("Minecraft", "https://example.com/minecraft.jpg")));
         when(userGameRepository.existsByUser_IdAndGame_Id(1L, 1L))
                 .thenReturn(true);
 
