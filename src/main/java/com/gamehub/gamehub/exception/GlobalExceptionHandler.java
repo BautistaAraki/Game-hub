@@ -46,6 +46,15 @@ public class GlobalExceptionHandler {
                 .body(exception.getMessage());
     }
 
+    @ExceptionHandler(SteamIntegrationException.class)
+    public ResponseEntity<String> handleSteamIntegration(
+            SteamIntegrationException exception
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_GATEWAY)
+                .body(exception.getMessage());
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleInvalidArgument(
             IllegalArgumentException exception
