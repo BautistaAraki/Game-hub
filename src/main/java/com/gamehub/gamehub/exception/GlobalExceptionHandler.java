@@ -1,5 +1,8 @@
 package com.gamehub.gamehub.exception;
 
+import com.gamehub.gamehub.DTO.ApiErrorResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -11,80 +14,77 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleNotFound(
-            ResourceNotFoundException exception
+    public ResponseEntity<ApiErrorResponse> handleNotFound(
+            ResourceNotFoundException exception,
+            HttpServletRequest request
     ) {
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(exception.getMessage());
+        return buildResponse(HttpStatus.NOT_FOUND, exception.getMessage(), request);
     }
 
     @ExceptionHandler(GameAlreadyInLibraryException.class)
-    public ResponseEntity<String> handleGameAlreadyInLibrary(
-            GameAlreadyInLibraryException exception
+    public ResponseEntity<ApiErrorResponse> handleGameAlreadyInLibrary(
+            GameAlreadyInLibraryException exception,
+            HttpServletRequest request
     ) {
-        return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body(exception.getMessage());
+        return buildResponse(HttpStatus.CONFLICT, exception.getMessage(), request);
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<String> handleUserAlreadyExists(
-            UserAlreadyExistsException exception
+    public ResponseEntity<ApiErrorResponse> handleUserAlreadyExists(
+            UserAlreadyExistsException exception,
+            HttpServletRequest request
     ) {
-        return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body(exception.getMessage());
+        return buildResponse(HttpStatus.CONFLICT, exception.getMessage(), request);
     }
 
     @ExceptionHandler(ExternalAccountAlreadyLinkedException.class)
-    public ResponseEntity<String> handleExternalAccountAlreadyLinked(
-            ExternalAccountAlreadyLinkedException exception
+    public ResponseEntity<ApiErrorResponse> handleExternalAccountAlreadyLinked(
+            ExternalAccountAlreadyLinkedException exception,
+            HttpServletRequest request
     ) {
-        return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body(exception.getMessage());
+        return buildResponse(HttpStatus.CONFLICT, exception.getMessage(), request);
     }
 
     @ExceptionHandler(InvalidCredentialsException.class)
-    public ResponseEntity<String> handleInvalidCredentials(
-            InvalidCredentialsException exception
+    public ResponseEntity<ApiErrorResponse> handleInvalidCredentials(
+            InvalidCredentialsException exception,
+            HttpServletRequest request
     ) {
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(exception.getMessage());
+        return buildResponse(HttpStatus.UNAUTHORIZED, exception.getMessage(), request);
     }
 
     @ExceptionHandler(SteamIntegrationException.class)
-    public ResponseEntity<String> handleSteamIntegration(
-            SteamIntegrationException exception
+    public ResponseEntity<ApiErrorResponse> handleSteamIntegration(
+            SteamIntegrationException exception,
+            HttpServletRequest request
     ) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_GATEWAY)
-                .body(exception.getMessage());
+        return buildResponse(HttpStatus.BAD_GATEWAY, exception.getMessage(), request);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleInvalidArgument(
-            IllegalArgumentException exception
+    public ResponseEntity<ApiErrorResponse> handleInvalidArgument(
+            IllegalArgumentException exception,
+            HttpServletRequest request
     ) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(exception.getMessage());
+        return buildResponse(HttpStatus.BAD_REQUEST, exception.getMessage(), request);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<String> handleTypeMismatch(
-            MethodArgumentTypeMismatchException exception
+    public ResponseEntity<ApiErrorResponse> handleTypeMismatch(
+            MethodArgumentTypeMismatchException exception,
+            HttpServletRequest request
     ) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body("Parametro invalido: " + exception.getName());
+        return buildResponse(
+                HttpStatus.BAD_REQUEST,
+                "Parametro invalido: " + exception.getName(),
+                request
+        );
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleValidation(
-            MethodArgumentNotValidException exception
+    public ResponseEntity<ApiErrorResponse> handleValidation(
+            MethodArgumentNotValidException exception,
+            HttpServletRequest request
     ) {
         String message = exception.getBindingResult()
                 .getFieldErrors()
@@ -93,8 +93,22 @@ public class GlobalExceptionHandler {
                 .map(error -> error.getDefaultMessage())
                 .orElse("Solicitud invalida");
 
+        return buildResponse(HttpStatus.BAD_REQUEST, message, request);
+    }
+
+    private ResponseEntity<ApiErrorResponse> buildResponse(
+            HttpStatus status,
+            String message,
+            HttpServletRequest request
+    ) {
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(message);
+                .status(status)
+                .body(new ApiErrorResponse(
+                        LocalDateTime.now(),
+                        status.value(),
+                        status.getReasonPhrase(),
+                        message,
+                        request.getRequestURI()
+                ));
     }
 }
