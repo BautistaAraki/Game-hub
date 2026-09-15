@@ -1,6 +1,6 @@
 package com.gamehub.gamehub.repository;
 
-import com.gamehub.gamehub.mode1.Game;
+import com.gamehub.gamehub.model.Game;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.gamehub.gamehub.DTO.GameResponse;
-import com.gamehub.gamehub.mode1.Game;
+import com.gamehub.gamehub.dto.GameResponse;
+import com.gamehub.gamehub.model.Game;
 import com.gamehub.gamehub.repository.GameRepository;
 import java.util.List;
 import org.junit.jupiter.api.Test;

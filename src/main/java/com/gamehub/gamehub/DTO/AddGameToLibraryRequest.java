@@ -1,4 +1,4 @@
-package com.gamehub.gamehub.DTO;
+package com.gamehub.gamehub.dto;
 
 import jakarta.validation.constraints.NotNull;
 

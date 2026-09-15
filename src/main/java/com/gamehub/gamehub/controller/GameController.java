@@ -1,6 +1,6 @@
 package com.gamehub.gamehub.controller;
 
-import com.gamehub.gamehub.DTO.GameResponse;
+import com.gamehub.gamehub.dto.GameResponse;
 import com.gamehub.gamehub.service.GameService;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;

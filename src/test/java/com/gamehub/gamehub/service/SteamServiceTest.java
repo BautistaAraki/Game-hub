@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.gamehub.gamehub.DTO.SteamGameResponse;
+import com.gamehub.gamehub.dto.SteamGameResponse;
 import com.gamehub.gamehub.integration.steam.SteamClient;
 import java.util.List;
 import org.junit.jupiter.api.Test;

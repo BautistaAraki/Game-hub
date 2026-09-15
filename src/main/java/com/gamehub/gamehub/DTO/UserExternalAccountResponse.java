@@ -1,6 +1,6 @@
-package com.gamehub.gamehub.DTO;
+package com.gamehub.gamehub.dto;
 
-import com.gamehub.gamehub.mode1.Platform;
+import com.gamehub.gamehub.model.Platform;
 
 public record UserExternalAccountResponse(
         Long id,

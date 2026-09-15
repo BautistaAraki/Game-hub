@@ -1,8 +1,8 @@
 package com.gamehub.gamehub.service;
 
-import com.gamehub.gamehub.DTO.LibraryStatsResponse;
-import com.gamehub.gamehub.mode1.GameStatus;
-import com.gamehub.gamehub.mode1.UserGame;
+import com.gamehub.gamehub.dto.LibraryStatsResponse;
+import com.gamehub.gamehub.model.GameStatus;
+import com.gamehub.gamehub.model.UserGame;
 import com.gamehub.gamehub.repository.UserGameRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;

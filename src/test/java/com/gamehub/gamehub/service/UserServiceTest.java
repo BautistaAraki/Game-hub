@@ -7,10 +7,10 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.gamehub.gamehub.DTO.RegisterUserRequest;
-import com.gamehub.gamehub.DTO.UserResponse;
+import com.gamehub.gamehub.dto.RegisterUserRequest;
+import com.gamehub.gamehub.dto.UserResponse;
 import com.gamehub.gamehub.exception.UserAlreadyExistsException;
-import com.gamehub.gamehub.mode1.User;
+import com.gamehub.gamehub.model.User;
 import com.gamehub.gamehub.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;

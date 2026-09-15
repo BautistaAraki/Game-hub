@@ -1,9 +1,9 @@
 package com.gamehub.gamehub.service;
 
-import com.gamehub.gamehub.DTO.RegisterUserRequest;
-import com.gamehub.gamehub.DTO.UserResponse;
+import com.gamehub.gamehub.dto.RegisterUserRequest;
+import com.gamehub.gamehub.dto.UserResponse;
 import com.gamehub.gamehub.exception.UserAlreadyExistsException;
-import com.gamehub.gamehub.mode1.User;
+import com.gamehub.gamehub.model.User;
 import com.gamehub.gamehub.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

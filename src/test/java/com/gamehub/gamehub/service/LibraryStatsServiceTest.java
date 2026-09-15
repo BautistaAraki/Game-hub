@@ -3,11 +3,11 @@ package com.gamehub.gamehub.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-import com.gamehub.gamehub.DTO.LibraryStatsResponse;
-import com.gamehub.gamehub.mode1.Game;
-import com.gamehub.gamehub.mode1.GameStatus;
-import com.gamehub.gamehub.mode1.User;
-import com.gamehub.gamehub.mode1.UserGame;
+import com.gamehub.gamehub.dto.LibraryStatsResponse;
+import com.gamehub.gamehub.model.Game;
+import com.gamehub.gamehub.model.GameStatus;
+import com.gamehub.gamehub.model.User;
+import com.gamehub.gamehub.model.UserGame;
 import com.gamehub.gamehub.repository.UserGameRepository;
 import java.util.List;
 import org.junit.jupiter.api.Test;

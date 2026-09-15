@@ -1,6 +1,6 @@
 package com.gamehub.gamehub.integration.steam;
 
-import com.gamehub.gamehub.DTO.SteamGameResponse;
+import com.gamehub.gamehub.dto.SteamGameResponse;
 import java.util.List;
 
 public interface SteamClient {

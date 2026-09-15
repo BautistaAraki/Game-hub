@@ -1,6 +1,6 @@
 package com.gamehub.gamehub.service;
 
-import com.gamehub.gamehub.DTO.SteamGameResponse;
+import com.gamehub.gamehub.dto.SteamGameResponse;
 import com.gamehub.gamehub.integration.steam.SteamClient;
 import java.util.List;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package com.gamehub.gamehub.controller;
 
-import com.gamehub.gamehub.DTO.SteamGameResponse;
-import com.gamehub.gamehub.DTO.SteamImportResponse;
+import com.gamehub.gamehub.dto.SteamGameResponse;
+import com.gamehub.gamehub.dto.SteamImportResponse;
 import com.gamehub.gamehub.service.SteamImportService;
 import com.gamehub.gamehub.service.SteamService;
 import java.util.List;

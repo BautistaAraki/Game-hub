@@ -2,7 +2,7 @@ package com.gamehub.gamehub.exception;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.gamehub.gamehub.DTO.ApiErrorResponse;
+import com.gamehub.gamehub.dto.ApiErrorResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;

@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-import com.gamehub.gamehub.DTO.LoginRequest;
-import com.gamehub.gamehub.DTO.UserResponse;
+import com.gamehub.gamehub.dto.LoginRequest;
+import com.gamehub.gamehub.dto.UserResponse;
 import com.gamehub.gamehub.exception.InvalidCredentialsException;
-import com.gamehub.gamehub.mode1.User;
+import com.gamehub.gamehub.model.User;
 import com.gamehub.gamehub.repository.UserRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;

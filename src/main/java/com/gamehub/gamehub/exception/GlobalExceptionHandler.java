@@ -1,6 +1,6 @@
 package com.gamehub.gamehub.exception;
 
-import com.gamehub.gamehub.DTO.ApiErrorResponse;
+import com.gamehub.gamehub.dto.ApiErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import org.springframework.http.HttpStatus;

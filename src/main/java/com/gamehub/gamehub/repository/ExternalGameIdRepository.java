@@ -1,7 +1,7 @@
 package com.gamehub.gamehub.repository;
 
-import com.gamehub.gamehub.mode1.ExternalGameId;
-import com.gamehub.gamehub.mode1.Platform;
+import com.gamehub.gamehub.model.ExternalGameId;
+import com.gamehub.gamehub.model.Platform;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

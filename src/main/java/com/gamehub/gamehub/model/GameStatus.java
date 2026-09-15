@@ -1,4 +1,4 @@
-package com.gamehub.gamehub.mode1;
+package com.gamehub.gamehub.model;
 
 public enum GameStatus {
     BACKLOG,

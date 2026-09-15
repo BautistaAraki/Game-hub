@@ -1,7 +1,7 @@
 package com.gamehub.gamehub.controller;
 
-import com.gamehub.gamehub.DTO.LinkSteamAccountRequest;
-import com.gamehub.gamehub.DTO.UserExternalAccountResponse;
+import com.gamehub.gamehub.dto.LinkSteamAccountRequest;
+import com.gamehub.gamehub.dto.UserExternalAccountResponse;
 import com.gamehub.gamehub.service.UserExternalAccountService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PathVariable;

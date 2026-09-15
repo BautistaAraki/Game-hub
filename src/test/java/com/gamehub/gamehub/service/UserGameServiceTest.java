@@ -7,9 +7,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.gamehub.gamehub.exception.GameAlreadyInLibraryException;
-import com.gamehub.gamehub.mode1.Game;
-import com.gamehub.gamehub.mode1.User;
-import com.gamehub.gamehub.mode1.UserGame;
+import com.gamehub.gamehub.model.Game;
+import com.gamehub.gamehub.model.User;
+import com.gamehub.gamehub.model.UserGame;
 import com.gamehub.gamehub.repository.GameRepository;
 import com.gamehub.gamehub.repository.UserGameRepository;
 import com.gamehub.gamehub.repository.UserRepository;

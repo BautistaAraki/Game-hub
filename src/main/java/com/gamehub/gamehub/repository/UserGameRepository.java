@@ -1,6 +1,6 @@
 package com.gamehub.gamehub.repository;
 
-import com.gamehub.gamehub.mode1.UserGame;
+import com.gamehub.gamehub.model.UserGame;
 
 import java.util.List;
 

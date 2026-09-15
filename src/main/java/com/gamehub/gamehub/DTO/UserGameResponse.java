@@ -1,5 +1,7 @@
-package com.gamehub.gamehub.DTO;
-import com.gamehub.gamehub.mode1.GameStatus;
+package com.gamehub.gamehub.dto;
+
+import com.gamehub.gamehub.model.GameStatus;
+
 public record UserGameResponse(
         Long id,
         Long userId,

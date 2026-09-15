@@ -1,4 +1,4 @@
-package com.gamehub.gamehub.mode1;
+package com.gamehub.gamehub.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,12 +1,12 @@
 package com.gamehub.gamehub.service;
 
-import com.gamehub.gamehub.DTO.LinkSteamAccountRequest;
-import com.gamehub.gamehub.DTO.UserExternalAccountResponse;
+import com.gamehub.gamehub.dto.LinkSteamAccountRequest;
+import com.gamehub.gamehub.dto.UserExternalAccountResponse;
 import com.gamehub.gamehub.exception.ExternalAccountAlreadyLinkedException;
 import com.gamehub.gamehub.exception.ResourceNotFoundException;
-import com.gamehub.gamehub.mode1.Platform;
-import com.gamehub.gamehub.mode1.User;
-import com.gamehub.gamehub.mode1.UserExternalAccount;
+import com.gamehub.gamehub.model.Platform;
+import com.gamehub.gamehub.model.User;
+import com.gamehub.gamehub.model.UserExternalAccount;
 import com.gamehub.gamehub.repository.UserExternalAccountRepository;
 import com.gamehub.gamehub.repository.UserRepository;
 import org.springframework.stereotype.Service;

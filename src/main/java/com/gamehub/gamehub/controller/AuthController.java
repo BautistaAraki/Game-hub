@@ -1,7 +1,7 @@
 package com.gamehub.gamehub.controller;
 
-import com.gamehub.gamehub.DTO.LoginRequest;
-import com.gamehub.gamehub.DTO.UserResponse;
+import com.gamehub.gamehub.dto.LoginRequest;
+import com.gamehub.gamehub.dto.UserResponse;
 import com.gamehub.gamehub.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,6 +1,6 @@
 package com.gamehub.gamehub.integration.steam;
 
-import com.gamehub.gamehub.DTO.SteamGameResponse;
+import com.gamehub.gamehub.dto.SteamGameResponse;
 import com.gamehub.gamehub.exception.SteamIntegrationException;
 import java.util.ArrayList;
 import java.util.List;

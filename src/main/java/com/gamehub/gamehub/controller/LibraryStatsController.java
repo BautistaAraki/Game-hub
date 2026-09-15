@@ -1,6 +1,6 @@
 package com.gamehub.gamehub.controller;
 
-import com.gamehub.gamehub.DTO.LibraryStatsResponse;
+import com.gamehub.gamehub.dto.LibraryStatsResponse;
 import com.gamehub.gamehub.service.LibraryStatsService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

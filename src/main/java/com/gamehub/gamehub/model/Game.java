@@ -1,4 +1,4 @@
-package com.gamehub.gamehub.mode1;
+package com.gamehub.gamehub.model;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.OneToMany;
