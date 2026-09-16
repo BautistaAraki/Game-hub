@@ -35,6 +35,14 @@ export type LibraryStatsResponse = {
   totalPlaytimeHours: number;
 };
 
+export type RawgGameResponse = {
+  rawgId: number;
+  name: string;
+  imageUrl: string | null;
+  released: string | null;
+  rating: number | null;
+};
+
 type ApiErrorResponse = {
   message?: string;
 };
@@ -74,10 +82,27 @@ export function getCatalog() {
   return request<GameResponse[]>("/api/games");
 }
 
+export function searchCatalog(query: string) {
+  return request<GameResponse[]>(`/api/games/search?query=${encodeURIComponent(query)}`);
+}
+
 export function getUserLibrary(userId: number) {
   return request<UserGameResponse[]>(`/api/library/users/${userId}`);
 }
 
 export function getLibraryStats(userId: number) {
   return request<LibraryStatsResponse>(`/api/library/users/${userId}/stats`);
+}
+
+export function searchRawgGames(query: string) {
+  return request<RawgGameResponse[]>(
+    `/api/rawg/games/search?query=${encodeURIComponent(query)}`
+  );
+}
+
+export function addGameToLibrary(userId: number, gameId: number) {
+  return request<UserGameResponse>("/api/library", {
+    method: "POST",
+    body: JSON.stringify({ userId, gameId })
+  });
 }

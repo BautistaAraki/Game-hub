@@ -61,4 +61,21 @@ class GlobalExceptionHandlerTest {
         assertEquals("STEAM_API_KEY no esta configurada", response.getBody().message());
         assertEquals("/api/steam/users/1/import-library", response.getBody().path());
     }
+
+    @Test
+    void handleRawgIntegrationReturnsStructured502Response() {
+        MockHttpServletRequest request = new MockHttpServletRequest(
+                "GET",
+                "/api/rawg/games/search"
+        );
+
+        ResponseEntity<ApiErrorResponse> response = handler.handleRawgIntegration(
+                new RawgIntegrationException("RAWG_API_KEY no esta configurada"),
+                request
+        );
+
+        assertEquals(502, response.getStatusCode().value());
+        assertEquals("RAWG_API_KEY no esta configurada", response.getBody().message());
+        assertEquals("/api/rawg/games/search", response.getBody().path());
+    }
 }

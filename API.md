@@ -8,11 +8,12 @@ http://localhost:8080
 
 ## Variables de entorno
 
-La aplicacion necesita estas variables cuando corre contra MySQL y/o Steam:
+La aplicacion necesita estas variables cuando corre contra MySQL, Steam y/o RAWG:
 
 ```powershell
 $env:DB_PASSWORD="..."
 $env:STEAM_API_KEY="..."
+$env:RAWG_API_KEY="..."
 ```
 
 No guardar estos valores en Git.
@@ -301,6 +302,43 @@ Respuesta:
 ```
 
 Steam se integra por una capa externa aislada. La biblioteca personal no debe llamar directamente a la Steam Web API.
+
+## RAWG
+
+RAWG se usa para buscar juegos cuando el usuario no conecta Steam o quiere agregar un juego manualmente desde una base externa.
+
+### Buscar juegos en RAWG
+
+```http
+GET /api/rawg/games/search?query=minecraft
+```
+
+Requiere `RAWG_API_KEY`.
+
+Respuesta:
+
+```json
+[
+  {
+    "rawgId": 58751,
+    "name": "Minecraft",
+    "imageUrl": "https://...",
+    "released": "2011-11-18",
+    "rating": 4.4
+  }
+]
+```
+
+Este endpoint solo busca candidatos. No crea juegos en `Game` y no modifica la biblioteca del usuario.
+
+Flujo recomendado para el frontend:
+
+```text
+Usuario busca un juego
+GameHub consulta RAWG
+Usuario elige el resultado correcto
+GameHub agrega ese juego a la biblioteca
+```
 
 ## Checklist manual antes del frontend
 

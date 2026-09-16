@@ -8,10 +8,13 @@ import {
   UserGameResponse,
   UserResponse
 } from "./api";
+import { AppScreen } from "./navigation";
 
 type HomePageProps = {
+  activeScreen: AppScreen;
   user: UserResponse;
   onLogout: () => void;
+  onNavigate: (screen: AppScreen) => void;
 };
 
 type LibraryGame = UserGameResponse & {
@@ -26,7 +29,7 @@ const statusLabels: Record<UserGameResponse["status"], string> = {
   DROPPED: "Abandonado"
 };
 
-function HomePage({ user, onLogout }: HomePageProps) {
+function HomePage({ activeScreen, user, onLogout, onNavigate }: HomePageProps) {
   const [catalog, setCatalog] = useState<GameResponse[]>([]);
   const [library, setLibrary] = useState<UserGameResponse[]>([]);
   const [stats, setStats] = useState<LibraryStatsResponse | null>(null);
@@ -94,9 +97,21 @@ function HomePage({ user, onLogout }: HomePageProps) {
       <aside className="sidebar" aria-label="Navegacion principal">
         <div className="sidebar-brand">GAMEHUB</div>
         <nav>
-          <button className="nav-item active" type="button">Home</button>
+          <button
+            className={activeScreen === "home" ? "nav-item active" : "nav-item"}
+            onClick={() => onNavigate("home")}
+            type="button"
+          >
+            Home
+          </button>
           <button className="nav-item" type="button">Biblioteca</button>
-          <button className="nav-item" type="button">Buscar</button>
+          <button
+            className={activeScreen === "search" ? "nav-item active" : "nav-item"}
+            onClick={() => onNavigate("search")}
+            type="button"
+          >
+            Buscar
+          </button>
           <button className="nav-item" type="button">Estadisticas</button>
           <button className="nav-item" type="button">Ajustes</button>
         </nav>
@@ -117,7 +132,11 @@ function HomePage({ user, onLogout }: HomePageProps) {
           </div>
           <label className="search-box">
             <span>Buscar</span>
-            <input placeholder="Buscar juegos" type="search" />
+            <input
+              onFocus={() => onNavigate("search")}
+              placeholder="Buscar juegos"
+              type="search"
+            />
           </label>
         </header>
 
@@ -175,7 +194,7 @@ function HomePage({ user, onLogout }: HomePageProps) {
           <div className="home-section">
             <div className="section-heading">
               <h2>Catalogo</h2>
-              <button type="button">Buscar</button>
+              <button onClick={() => onNavigate("search")} type="button">Buscar</button>
             </div>
 
             {catalogPreview.length > 0 ? (

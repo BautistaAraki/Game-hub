@@ -1,6 +1,8 @@
 import { FormEvent, useState } from "react";
 import { login, register, UserResponse } from "./api";
 import HomePage from "./HomePage";
+import { AppScreen } from "./navigation";
+import SearchPage from "./SearchPage";
 
 type AuthMode = "login" | "register";
 
@@ -20,6 +22,7 @@ function App() {
   const [mode, setMode] = useState<AuthMode>("login");
   const [form, setForm] = useState<FormState>(initialForm);
   const [user, setUser] = useState<UserResponse | null>(null);
+  const [screen, setScreen] = useState<AppScreen>("home");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -48,6 +51,7 @@ function App() {
         : await register(form.username, form.email, form.password);
 
       setUser(response);
+      setScreen("home");
       setForm(initialForm);
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : "Error inesperado");
@@ -57,7 +61,25 @@ function App() {
   }
 
   if (user) {
-    return <HomePage user={user} onLogout={() => setUser(null)} />;
+    if (screen === "search") {
+      return (
+        <SearchPage
+          activeScreen={screen}
+          onLogout={() => setUser(null)}
+          onNavigate={setScreen}
+          user={user}
+        />
+      );
+    }
+
+    return (
+      <HomePage
+        activeScreen={screen}
+        onLogout={() => setUser(null)}
+        onNavigate={setScreen}
+        user={user}
+      />
+    );
   }
 
   return (
