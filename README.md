@@ -12,13 +12,19 @@ El proyecto nace con el objetivo de aplicar y profundizar conocimientos de desar
 
 Pantalla de autenticación con registro e inicio de sesión.
 
+![Inicio de sesión y registro](docs/images/preview-login-register.png)
+
 ### Home
 
 Vista principal con resumen de biblioteca, juegos destacados, métricas y acceso al catálogo.
 
+![Home](docs/images/preview-home.png)
+
 ### Biblioteca
 
 Pantalla planificada para gestionar la biblioteca personal de videojuegos.
+
+![Biblioteca](docs/images/preview-library.png)
 
 ### Búsqueda de videojuegos
 
@@ -27,6 +33,8 @@ Pantalla para buscar juegos en el catálogo local y, próximamente, mediante API
 ### Detalle de videojuego
 
 Pantalla planificada para visualizar información global del juego y datos personales del usuario, como estado, rating, horas jugadas y favorito.
+
+![Detalle de videojuego](docs/images/preview-game-detail.png)
 
 ## 🚀 Funcionalidades
 
