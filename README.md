@@ -22,7 +22,7 @@ Vista principal con resumen de biblioteca, juegos destacados, métricas y acceso
 
 ### Biblioteca
 
-Pantalla planificada para gestionar la biblioteca personal de videojuegos.
+Pantalla para gestionar la biblioteca personal de videojuegos.
 
 ![Biblioteca](docs/images/preview-library.png)
 
@@ -32,7 +32,7 @@ Pantalla para buscar juegos en el catálogo local y, próximamente, mediante API
 
 ### Detalle de videojuego
 
-Pantalla planificada para visualizar información global del juego y datos personales del usuario, como estado, rating, horas jugadas y favorito.
+Pantalla para visualizar información global del juego y datos personales del usuario, como estado, rating, horas jugadas y favorito.
 
 ![Detalle de videojuego](docs/images/preview-game-detail.png)
 
@@ -113,7 +113,7 @@ También lo uso como proyecto de portfolio para demostrar evolución técnica, c
 
 ## 🔜 Próximos pasos
 
-- Continuar desarrollando las pantallas de biblioteca y detalle de videojuego.
+- Continuar desarrollando las funcionalidades de biblioteca y detalle de videojuego.
 - Mejorar el sistema de autenticación.
 - Incorporar autenticación con Spring Security y JWT.
 - Permitir creación manual de videojuegos cuando no existan en el catálogo.
