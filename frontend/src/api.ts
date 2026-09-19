@@ -35,8 +35,8 @@ export type LibraryStatsResponse = {
   totalPlaytimeHours: number;
 };
 
-export type RawgGameResponse = {
-  rawgId: number;
+export type IgdbGameResponse = {
+  igdbId: number;
   name: string;
   imageUrl: string | null;
   released: string | null;
@@ -48,20 +48,30 @@ type ApiErrorResponse = {
 };
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    headers: {
-      "Content-Type": "application/json",
-      ...options.headers
-    },
-    ...options
-  });
+  const headers = new Headers(options.headers);
+  if (options.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
+  const timeout = AbortSignal.timeout(60000);
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      ...options,
+      headers,
+      signal: options.signal ? AbortSignal.any([options.signal, timeout]) : timeout
+    });
+  } catch (error) {
+    if (options.signal?.aborted) throw error;
+    throw new Error(timeout.aborted
+      ? "La solicitud tardó demasiado. Intentá nuevamente."
+      : "No se pudo conectar con el servidor. Comprobá que Spring esté iniciado.");
+  }
 
   if (!response.ok) {
     const body = (await response.json().catch(() => ({}))) as ApiErrorResponse;
-    throw new Error(body.message ?? "No se pudo completar la solicitud");
+    throw new Error(body?.message ?? "No se pudo completar la solicitud");
   }
 
-  return response.json() as Promise<T>;
+  const body = await response.text();
+  return body ? JSON.parse(body) as T : undefined as T;
 }
 
 export function login(email: string, password: string) {
@@ -82,8 +92,8 @@ export function getCatalog() {
   return request<GameResponse[]>("/api/games");
 }
 
-export function searchCatalog(query: string) {
-  return request<GameResponse[]>(`/api/games/search?query=${encodeURIComponent(query)}`);
+export function searchCatalog(query: string, signal?: AbortSignal) {
+  return request<GameResponse[]>(`/api/games/search?query=${encodeURIComponent(query)}`, { signal });
 }
 
 export function getUserLibrary(userId: number) {
@@ -94,9 +104,9 @@ export function getLibraryStats(userId: number) {
   return request<LibraryStatsResponse>(`/api/library/users/${userId}/stats`);
 }
 
-export function searchRawgGames(query: string) {
-  return request<RawgGameResponse[]>(
-    `/api/rawg/games/search?query=${encodeURIComponent(query)}`
+export function searchIgdbGames(query: string, signal?: AbortSignal) {
+  return request<IgdbGameResponse[]>(
+    `/api/igdb/games/search?query=${encodeURIComponent(query)}`, { signal }
   );
 }
 

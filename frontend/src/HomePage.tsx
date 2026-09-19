@@ -1,3 +1,4 @@
+import Sidebar from "./Sidebar";
 import { useEffect, useMemo, useState } from "react";
 import {
   GameResponse,
@@ -94,35 +95,7 @@ function HomePage({ activeScreen, user, onLogout, onNavigate }: HomePageProps) {
 
   return (
     <main className="app-shell">
-      <aside className="sidebar" aria-label="Navegacion principal">
-        <div className="sidebar-brand">GAMEHUB</div>
-        <nav>
-          <button
-            className={activeScreen === "home" ? "nav-item active" : "nav-item"}
-            onClick={() => onNavigate("home")}
-            type="button"
-          >
-            Home
-          </button>
-          <button className="nav-item" type="button">Biblioteca</button>
-          <button
-            className={activeScreen === "search" ? "nav-item active" : "nav-item"}
-            onClick={() => onNavigate("search")}
-            type="button"
-          >
-            Buscar
-          </button>
-          <button className="nav-item" type="button">Estadisticas</button>
-          <button className="nav-item" type="button">Ajustes</button>
-        </nav>
-        <div className="sidebar-user">
-          <span className="avatar">{user.username.slice(0, 1).toUpperCase()}</span>
-          <div>
-            <strong>{user.username}</strong>
-            <button type="button" onClick={onLogout}>Cerrar sesion</button>
-          </div>
-        </div>
-      </aside>
+      <Sidebar activeScreen={activeScreen} user={user} onLogout={onLogout} onNavigate={onNavigate} />
 
       <section className="home-page">
         <header className="topbar">
@@ -166,7 +139,7 @@ function HomePage({ activeScreen, user, onLogout, onNavigate }: HomePageProps) {
           <div className="home-section">
             <div className="section-heading">
               <h2>Tu biblioteca</h2>
-              <button type="button">Ver todo</button>
+              <button onClick={() => onNavigate("library")} type="button">Ver todo</button>
             </div>
 
             {isLoading ? (

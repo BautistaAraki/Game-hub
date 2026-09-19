@@ -1,3 +1,4 @@
+import LibraryPage from "./LibraryPage";
 import { FormEvent, useState } from "react";
 import { login, register, UserResponse } from "./api";
 import HomePage from "./HomePage";
@@ -61,6 +62,10 @@ function App() {
   }
 
   if (user) {
+    if (screen === "library") {
+      return <LibraryPage user={user} onLogout={() => setUser(null)} onNavigate={setScreen} />;
+    }
+
     if (screen === "search") {
       return (
         <SearchPage

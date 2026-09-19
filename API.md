@@ -361,3 +361,27 @@ Invoke-WebRequest -Method Post -Uri "http://localhost:8080/api/library" -Content
 ```
 
 El caso `rating=15` debe devolver `400` y no debe modificar el rating anterior.
+
+## IGDB: búsqueda externa
+
+`GET /api/igdb/games/search?query=minecraft`
+
+Es el proveedor usado por la pantalla Buscar. Requiere `IGDB_CLIENT_ID` y `IGDB_CLIENT_SECRET` en el backend. Configuración: [guía IGDB](docs/igdb-setup.md).
+
+Respuesta 200:
+
+```json
+[
+  {
+    "igdbId": 121,
+    "name": "Minecraft",
+    "imageUrl": null,
+    "released": "2011-11-18",
+    "rating": 85.0
+  }
+]
+```
+
+Hasta 10 resultados. `imageUrl`, `released` y `rating` pueden ser null. Rating externo sobre 100. Una búsqueda sin coincidencias devuelve `[]`. Query obligatorio, hasta 200 caracteres, sin caracteres de control: entrada inválida devuelve 400. Credenciales ausentes, errores de Twitch/IGDB o límites del proveedor devuelven 502 con `ApiErrorResponse`.
+
+Solo consulta: no crea juegos ni modifica bibliotecas. El endpoint RAWG anterior sigue disponible por compatibilidad.

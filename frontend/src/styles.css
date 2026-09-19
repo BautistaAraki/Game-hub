@@ -589,8 +589,13 @@ input:focus {
 }
 
 .catalog-row-action {
+  display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
 }
+
+.catalog-row-action h3 { overflow-wrap: anywhere; }
+.catalog-row-action button:disabled { cursor: default; opacity: 0.6; }
+.section-heading a { color: #b5a4ff; }
 
 .catalog-row-action button,
 .external-game-card button {
@@ -646,6 +651,66 @@ input:focus {
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   background: #171927;
+}
+
+.library-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: #11131d;
+}
+
+.library-controls select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid #42465c;
+  border-radius: 6px;
+  color: #ffffff;
+  background: #10111a;
+  font: inherit;
+}
+
+.library-controls select:focus-visible,
+.library-page button:focus-visible,
+.sidebar button:focus-visible {
+  outline: 2px solid #ad99ff;
+  outline-offset: 3px;
+}
+
+.library-page .topbar .primary-action { margin-top: 0; }
+
+.library-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+  gap: 18px;
+}
+
+.library-card {
+  align-content: start;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: #11131d;
+}
+
+.library-card .game-art {
+  aspect-ratio: 16 / 10;
+  border: 0;
+  border-radius: 0;
+}
+
+.library-card-content { padding: 4px 16px 16px; }
+.library-card h2 { margin: 0; font-size: 1rem; overflow-wrap: anywhere; }
+.library-card .library-status { color: #c4b5ff; }
+.library-favorite { display: inline-block; margin-top: 10px; color: #ffe29b; font-size: 0.82rem; }
+
+@media (max-width: 520px) {
+  .library-controls { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 820px) {

@@ -61,6 +61,13 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.BAD_GATEWAY, exception.getMessage(), request);
     }
 
+    @ExceptionHandler(IgdbIntegrationException.class)
+    public ResponseEntity<ApiErrorResponse> handleIgdbIntegration(
+            IgdbIntegrationException exception, HttpServletRequest request
+    ) {
+        return buildResponse(HttpStatus.BAD_GATEWAY, exception.getMessage(), request);
+    }
+
     @ExceptionHandler(RawgIntegrationException.class)
     public ResponseEntity<ApiErrorResponse> handleRawgIntegration(
             RawgIntegrationException exception,

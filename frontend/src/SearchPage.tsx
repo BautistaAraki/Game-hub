@@ -1,10 +1,11 @@
-import { FormEvent, useState } from "react";
+import Sidebar from "./Sidebar";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import {
   addGameToLibrary,
   GameResponse,
-  RawgGameResponse,
+  IgdbGameResponse,
   searchCatalog,
-  searchRawgGames,
+  searchIgdbGames,
   UserResponse
 } from "./api";
 import { AppScreen } from "./navigation";
@@ -19,98 +20,93 @@ type SearchPageProps = {
 function SearchPage({ activeScreen, user, onLogout, onNavigate }: SearchPageProps) {
   const [query, setQuery] = useState("");
   const [localResults, setLocalResults] = useState<GameResponse[]>([]);
-  const [rawgResults, setRawgResults] = useState<RawgGameResponse[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
+  const [igdbResults, setIgdbResults] = useState<IgdbGameResponse[]>([]);
+  const [localLoading, setLocalLoading] = useState(false);
+  const [externalLoading, setExternalLoading] = useState(false);
+  const isSearching = localLoading || externalLoading;
+  const [hasSearched, setHasSearched] = useState(false);
+  const [messageIsError, setMessageIsError] = useState(false);
+  const [addingIds, setAddingIds] = useState<Set<number>>(new Set());
+  const [addedIds, setAddedIds] = useState<Set<number>>(new Set());
+  const pendingAdds = useRef(new Set<number>());
+  const searchController = useRef<AbortController | null>(null);
+  useEffect(() => () => searchController.current?.abort(), []);
   const [message, setMessage] = useState("");
-  const [rawgWarning, setRawgWarning] = useState("");
+  const [igdbWarning, setIgdbWarning] = useState("");
 
   async function handleSearch(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    if (isSearching) return;
+
     if (!query.trim()) {
+      setMessageIsError(true);
       setMessage("Escribi el nombre de un juego para buscar.");
       setLocalResults([]);
-      setRawgResults([]);
-      setRawgWarning("");
+      setIgdbResults([]);
+      setIgdbWarning("");
       return;
     }
 
-    setIsSearching(true);
+    const controller = new AbortController();
+    searchController.current?.abort();
+    searchController.current = controller;
+    setHasSearched(true);
+    setLocalLoading(true);
+    setExternalLoading(true);
+    setMessageIsError(false);
     setMessage("");
-    setRawgWarning("");
+    setIgdbWarning("");
 
-    const [localResponse, rawgResponse] = await Promise.allSettled([
-      searchCatalog(query),
-      searchRawgGames(query)
+    setLocalResults([]);
+    setIgdbResults([]);
+    // Render each source as soon as it responds; a slow provider must not hide local results.
+    await Promise.all([
+      searchCatalog(query.trim(), controller.signal).then((games) => {
+        if (!controller.signal.aborted) setLocalResults(games);
+      }).catch((error: unknown) => {
+        if (!controller.signal.aborted) {
+          setMessageIsError(true);
+          setMessage(error instanceof Error ? error.message : "No se pudo consultar el catalogo local.");
+        }
+      }).finally(() => { if (!controller.signal.aborted) setLocalLoading(false); }),
+      searchIgdbGames(query.trim(), controller.signal).then((games) => {
+        if (!controller.signal.aborted) setIgdbResults(games);
+      }).catch((error: unknown) => {
+        if (!controller.signal.aborted) setIgdbWarning(error instanceof Error ? error.message : "No pudimos consultar IGDB ahora.");
+      }).finally(() => { if (!controller.signal.aborted) setExternalLoading(false); })
     ]);
 
-    if (localResponse.status === "fulfilled") {
-      setLocalResults(localResponse.value);
-    } else {
-      setLocalResults([]);
-      setMessage("No se pudo consultar el catalogo local.");
-    }
 
-    if (rawgResponse.status === "fulfilled") {
-      setRawgResults(rawgResponse.value);
-    } else {
-      setRawgResults([]);
-      setRawgWarning(
-        rawgResponse.reason instanceof Error
-          ? rawgResponse.reason.message
-          : "No pudimos consultar RAWG ahora."
-      );
-    }
-
-    setIsSearching(false);
   }
 
   async function handleAddLocalGame(game: GameResponse) {
+    if (pendingAdds.current.has(game.id) || addedIds.has(game.id)) return;
+    pendingAdds.current.add(game.id);
+    setAddingIds(new Set(pendingAdds.current));
     setMessage("");
+    setMessageIsError(false);
 
     try {
       await addGameToLibrary(user.id, game.id);
+      setAddedIds((current) => new Set(current).add(game.id));
       setMessage(`${game.name} se agrego a tu biblioteca.`);
     } catch (requestError) {
+      setMessageIsError(true);
       setMessage(
         requestError instanceof Error
           ? requestError.message
           : "No se pudo agregar el juego."
       );
+    } finally {
+      pendingAdds.current.delete(game.id);
+      setAddingIds(new Set(pendingAdds.current));
     }
   }
 
   return (
     <main className="app-shell">
-      <aside className="sidebar" aria-label="Navegacion principal">
-        <div className="sidebar-brand">GAMEHUB</div>
-        <nav>
-          <button
-            className={activeScreen === "home" ? "nav-item active" : "nav-item"}
-            onClick={() => onNavigate("home")}
-            type="button"
-          >
-            Home
-          </button>
-          <button className="nav-item" type="button">Biblioteca</button>
-          <button
-            className={activeScreen === "search" ? "nav-item active" : "nav-item"}
-            onClick={() => onNavigate("search")}
-            type="button"
-          >
-            Buscar
-          </button>
-          <button className="nav-item" type="button">Estadisticas</button>
-          <button className="nav-item" type="button">Ajustes</button>
-        </nav>
-        <div className="sidebar-user">
-          <span className="avatar">{user.username.slice(0, 1).toUpperCase()}</span>
-          <div>
-            <strong>{user.username}</strong>
-            <button type="button" onClick={onLogout}>Cerrar sesion</button>
-          </div>
-        </div>
-      </aside>
+      <Sidebar activeScreen={activeScreen} user={user} onLogout={onLogout} onNavigate={onNavigate} />
 
       <section className="home-page">
         <header className="topbar">
@@ -126,6 +122,8 @@ function SearchPage({ activeScreen, user, onLogout, onNavigate }: SearchPageProp
             <input
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Minecraft, Elden Ring, Hollow Knight..."
+              maxLength={200}
+              disabled={isSearching}
               type="search"
               value={query}
             />
@@ -135,10 +133,10 @@ function SearchPage({ activeScreen, user, onLogout, onNavigate }: SearchPageProp
           </button>
         </form>
 
-        {message && <p className="form-message success">{message}</p>}
-        {rawgWarning && (
+        {message && <p role={messageIsError ? "alert" : "status"} className={`form-message ${messageIsError ? "error" : "success"}`}>{message}</p>}
+        {igdbWarning && (
           <p className="form-message warning">
-            Buscador externo no disponible: {rawgWarning}
+            Buscador externo no disponible: {igdbWarning}
           </p>
         )}
 
@@ -148,7 +146,7 @@ function SearchPage({ activeScreen, user, onLogout, onNavigate }: SearchPageProp
               <h2>Catalogo local</h2>
             </div>
 
-            {localResults.length > 0 ? (
+            {localLoading ? <p role="status" className="muted">Buscando en el catálogo local...</p> : localResults.length > 0 ? (
               <div className="catalog-list">
                 {localResults.map((game) => (
                   <article className="catalog-row catalog-row-action" key={game.id}>
@@ -157,34 +155,35 @@ function SearchPage({ activeScreen, user, onLogout, onNavigate }: SearchPageProp
                       <h3>{game.name}</h3>
                       <p>Disponible en GameHub</p>
                     </div>
-                    <button type="button" onClick={() => handleAddLocalGame(game)}>
-                      Agregar
+                    <button type="button" disabled={addingIds.has(game.id) || addedIds.has(game.id)} onClick={() => handleAddLocalGame(game)}>
+                      {addingIds.has(game.id) ? "Agregando..." : addedIds.has(game.id) ? "Agregado" : "Agregar"}
                     </button>
                   </article>
                 ))}
               </div>
             ) : (
               <EmptyState
-                title="Sin resultados locales"
-                text="Si RAWG esta disponible, abajo vas a ver coincidencias externas."
+                title={hasSearched ? "Sin resultados locales" : "Buscá tu próximo juego"}
+                text="Escribí un nombre para consultar el catálogo local y los resultados externos."
               />
             )}
           </div>
 
           <div className="home-section">
             <div className="section-heading">
-              <h2>Resultados externos</h2>
+              <h2>Resultados de IGDB</h2>
+              <a href="https://www.igdb.com/" target="_blank" rel="noreferrer">Datos de IGDB</a>
             </div>
 
-            {rawgResults.length > 0 ? (
+            {externalLoading ? <p role="status" className="muted">Buscando en IGDB...</p> : igdbResults.length > 0 ? (
               <div className="external-game-grid">
-                {rawgResults.map((game) => (
-                  <article className="external-game-card" key={game.rawgId}>
-                    <RawgArtwork game={game} />
+                {igdbResults.map((game) => (
+                  <article className="external-game-card" key={game.igdbId}>
+                    <IgdbArtwork game={game} />
                     <div>
                       <h3>{game.name}</h3>
                       <p>
-                        {game.released ?? "Sin fecha"} · {game.rating ?? "Sin rating"}
+                        {game.released ?? "Sin fecha"} · {game.rating == null ? "Sin rating" : `${game.rating.toFixed(1)}/100`}
                       </p>
                     </div>
                     <button disabled type="button">Pendiente</button>
@@ -193,8 +192,8 @@ function SearchPage({ activeScreen, user, onLogout, onNavigate }: SearchPageProp
               </div>
             ) : (
               <EmptyState
-                title="Sin resultados externos"
-                text="Si RAWG falla, tu busqueda local sigue funcionando."
+                title={hasSearched ? "Sin resultados externos" : "Búsqueda externa"}
+                text="Si IGDB falla, tu busqueda local sigue funcionando."
               />
             )}
           </div>
@@ -205,6 +204,10 @@ function SearchPage({ activeScreen, user, onLogout, onNavigate }: SearchPageProp
 }
 
 function GameArtwork({ game }: { game: GameResponse }) {
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  if (game.imageUrl && game.imageUrl !== failedUrl) {
+    return <img alt={game.name} className="game-art game-art-small" src={game.imageUrl} onError={() => setFailedUrl(game.imageUrl)} />;
+  }
   return (
     <div className="game-art game-art-small fallback-art" aria-hidden="true">
       <span>{game.name.slice(0, 2).toUpperCase()}</span>
@@ -212,11 +215,12 @@ function GameArtwork({ game }: { game: GameResponse }) {
   );
 }
 
-function RawgArtwork({ game }: { game: RawgGameResponse }) {
+function IgdbArtwork({ game }: { game: IgdbGameResponse }) {
+  const [imageFailed, setImageFailed] = useState(false);
   const initials = game.name.slice(0, 2).toUpperCase();
 
-  if (game.imageUrl) {
-    return <img alt={game.name} className="external-game-art" src={game.imageUrl} />;
+  if (game.imageUrl && !imageFailed) {
+    return <img alt={game.name} className="external-game-art" src={game.imageUrl} onError={() => setImageFailed(true)} />;
   }
 
   return (
