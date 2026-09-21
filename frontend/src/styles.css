@@ -20,7 +20,8 @@ body {
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
 }
 
@@ -190,7 +191,8 @@ label {
   font-weight: 700;
 }
 
-input {
+input,
+select {
   width: 100%;
   min-height: 42px;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -202,6 +204,11 @@ input {
 }
 
 input:focus {
+  border-color: #8d75ff;
+  box-shadow: 0 0 0 3px rgba(117, 88, 255, 0.18);
+}
+
+select:focus {
   border-color: #8d75ff;
   box-shadow: 0 0 0 3px rgba(117, 88, 255, 0.18);
 }
@@ -416,6 +423,10 @@ input:focus {
   background: #7558ff;
   padding: 0 18px;
   font-weight: 800;
+}
+
+.compact-action {
+  margin-top: 0;
 }
 
 .secondary-action {
@@ -679,6 +690,89 @@ input:focus {
   padding: 26px;
 }
 
+.library-page {
+  display: grid;
+  gap: 22px;
+  align-content: start;
+  padding: 26px;
+}
+
+.library-toolbar {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) minmax(180px, 0.35fr) minmax(180px, 0.35fr);
+  gap: 14px;
+  align-items: end;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: #11131d;
+}
+
+.library-summary-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.library-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 16px;
+}
+
+.library-card {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.library-cover {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: #171927;
+}
+
+.library-card-body {
+  display: grid;
+  gap: 10px;
+}
+
+.library-card h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 0.98rem;
+  letter-spacing: 0;
+}
+
+.library-card p {
+  margin: 4px 0 0;
+  color: #9ba0b5;
+  font-size: 0.82rem;
+}
+
+.library-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.library-card-meta span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: #d7d9e5;
+  background: #11131d;
+  padding: 0 8px;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
 .detail-hero {
   display: grid;
   grid-template-columns: minmax(220px, 36%) minmax(0, 1fr);
@@ -833,6 +927,8 @@ input:focus {
   .content-grid,
   .search-panel,
   .search-results-grid,
+  .library-toolbar,
+  .library-summary-row,
   .detail-hero,
   .detail-grid {
     grid-template-columns: 1fr;
@@ -880,6 +976,7 @@ input:focus {
   .brand-panel,
   .auth-panel,
   .home-page,
+  .library-page,
   .detail-page {
     padding: 22px;
   }

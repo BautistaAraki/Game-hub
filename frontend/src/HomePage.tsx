@@ -105,7 +105,13 @@ function HomePage({ activeScreen, user, onLogout, onOpenGame, onNavigate }: Home
           >
             Home
           </button>
-          <button className="nav-item" type="button">Biblioteca</button>
+          <button
+            className={activeScreen === "library" ? "nav-item active" : "nav-item"}
+            onClick={() => onNavigate("library")}
+            type="button"
+          >
+            Biblioteca
+          </button>
           <button
             className={activeScreen === "search" ? "nav-item active" : "nav-item"}
             onClick={() => onNavigate("search")}
@@ -174,7 +180,7 @@ function HomePage({ activeScreen, user, onLogout, onOpenGame, onNavigate }: Home
           <div className="home-section">
             <div className="section-heading">
               <h2>Tu biblioteca</h2>
-              <button type="button">Ver todo</button>
+              <button onClick={() => onNavigate("library")} type="button">Ver todo</button>
             </div>
 
             {isLoading ? (

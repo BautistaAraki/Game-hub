@@ -2,6 +2,7 @@ import { FormEvent, useState } from "react";
 import { login, register, UserResponse } from "./api";
 import GameDetailPage from "./GameDetailPage";
 import HomePage from "./HomePage";
+import LibraryPage from "./LibraryPage";
 import { AppScreen } from "./navigation";
 import SearchPage from "./SearchPage";
 
@@ -78,6 +79,18 @@ function App() {
     if (screen === "search") {
       return (
         <SearchPage
+          activeScreen={screen}
+          onLogout={logout}
+          onOpenGame={openGameDetail}
+          onNavigate={setScreen}
+          user={user}
+        />
+      );
+    }
+
+    if (screen === "library") {
+      return (
+        <LibraryPage
           activeScreen={screen}
           onLogout={logout}
           onOpenGame={openGameDetail}

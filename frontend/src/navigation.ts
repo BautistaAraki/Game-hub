@@ -1,1 +1,1 @@
-export type AppScreen = "home" | "search" | "detail";
+export type AppScreen = "home" | "library" | "search" | "detail";

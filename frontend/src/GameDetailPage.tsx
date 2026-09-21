@@ -97,7 +97,13 @@ function GameDetailPage({
           >
             Home
           </button>
-          <button className="nav-item" type="button">Biblioteca</button>
+          <button
+            className={activeScreen === "library" ? "nav-item active" : "nav-item"}
+            onClick={() => onNavigate("library")}
+            type="button"
+          >
+            Biblioteca
+          </button>
           <button
             className={activeScreen === "search" ? "nav-item active" : "nav-item"}
             onClick={() => onNavigate("search")}
