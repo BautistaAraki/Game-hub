@@ -1,5 +1,6 @@
 import { FormEvent, useState } from "react";
 import { login, register, UserResponse } from "./api";
+import GameDetailPage from "./GameDetailPage";
 import HomePage from "./HomePage";
 import { AppScreen } from "./navigation";
 import SearchPage from "./SearchPage";
@@ -23,6 +24,7 @@ function App() {
   const [form, setForm] = useState<FormState>(initialForm);
   const [user, setUser] = useState<UserResponse | null>(null);
   const [screen, setScreen] = useState<AppScreen>("home");
+  const [selectedGameId, setSelectedGameId] = useState<number | null>(null);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -52,6 +54,7 @@ function App() {
 
       setUser(response);
       setScreen("home");
+      setSelectedGameId(null);
       setForm(initialForm);
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : "Error inesperado");
@@ -61,11 +64,35 @@ function App() {
   }
 
   if (user) {
+    function openGameDetail(gameId: number) {
+      setSelectedGameId(gameId);
+      setScreen("detail");
+    }
+
+    function logout() {
+      setUser(null);
+      setSelectedGameId(null);
+      setScreen("home");
+    }
+
     if (screen === "search") {
       return (
         <SearchPage
           activeScreen={screen}
-          onLogout={() => setUser(null)}
+          onLogout={logout}
+          onOpenGame={openGameDetail}
+          onNavigate={setScreen}
+          user={user}
+        />
+      );
+    }
+
+    if (screen === "detail") {
+      return (
+        <GameDetailPage
+          activeScreen={screen}
+          gameId={selectedGameId}
+          onLogout={logout}
           onNavigate={setScreen}
           user={user}
         />
@@ -75,7 +102,8 @@ function App() {
     return (
       <HomePage
         activeScreen={screen}
-        onLogout={() => setUser(null)}
+        onLogout={logout}
+        onOpenGame={openGameDetail}
         onNavigate={setScreen}
         user={user}
       />

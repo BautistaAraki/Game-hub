@@ -13,10 +13,11 @@ type SearchPageProps = {
   activeScreen: AppScreen;
   user: UserResponse;
   onLogout: () => void;
+  onOpenGame: (gameId: number) => void;
   onNavigate: (screen: AppScreen) => void;
 };
 
-function SearchPage({ activeScreen, user, onLogout, onNavigate }: SearchPageProps) {
+function SearchPage({ activeScreen, user, onLogout, onOpenGame, onNavigate }: SearchPageProps) {
   const [query, setQuery] = useState("");
   const [localResults, setLocalResults] = useState<GameResponse[]>([]);
   const [rawgResults, setRawgResults] = useState<RawgGameResponse[]>([]);
@@ -160,6 +161,9 @@ function SearchPage({ activeScreen, user, onLogout, onNavigate }: SearchPageProp
                     <button type="button" onClick={() => handleAddLocalGame(game)}>
                       Agregar
                     </button>
+                    <button type="button" onClick={() => onOpenGame(game.id)}>
+                      Ver
+                    </button>
                   </article>
                 ))}
               </div>
@@ -205,6 +209,19 @@ function SearchPage({ activeScreen, user, onLogout, onNavigate }: SearchPageProp
 }
 
 function GameArtwork({ game }: { game: GameResponse }) {
+  const [imageFailed, setImageFailed] = useState(false);
+
+  if (game.imageUrl && !imageFailed) {
+    return (
+      <img
+        alt={game.name}
+        className="game-art game-art-small"
+        onError={() => setImageFailed(true)}
+        src={game.imageUrl}
+      />
+    );
+  }
+
   return (
     <div className="game-art game-art-small fallback-art" aria-hidden="true">
       <span>{game.name.slice(0, 2).toUpperCase()}</span>

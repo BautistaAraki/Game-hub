@@ -14,6 +14,7 @@ type HomePageProps = {
   activeScreen: AppScreen;
   user: UserResponse;
   onLogout: () => void;
+  onOpenGame: (gameId: number) => void;
   onNavigate: (screen: AppScreen) => void;
 };
 
@@ -29,7 +30,7 @@ const statusLabels: Record<UserGameResponse["status"], string> = {
   DROPPED: "Abandonado"
 };
 
-function HomePage({ activeScreen, user, onLogout, onNavigate }: HomePageProps) {
+function HomePage({ activeScreen, user, onLogout, onOpenGame, onNavigate }: HomePageProps) {
   const [catalog, setCatalog] = useState<GameResponse[]>([]);
   const [library, setLibrary] = useState<UserGameResponse[]>([]);
   const [stats, setStats] = useState<LibraryStatsResponse | null>(null);
@@ -150,7 +151,14 @@ function HomePage({ activeScreen, user, onLogout, onNavigate }: HomePageProps) {
               Organiza tu biblioteca personal, marca favoritos y segui el estado
               de cada juego desde un solo lugar.
             </p>
-            <button className="primary-action" type="button">Continuar</button>
+            <button
+              className="primary-action"
+              disabled={!featuredGame}
+              onClick={() => featuredGame && onOpenGame(featuredGame.id)}
+              type="button"
+            >
+              Ver detalle
+            </button>
           </div>
           <GameArtwork game={featuredGame} size="large" />
         </section>
@@ -174,7 +182,11 @@ function HomePage({ activeScreen, user, onLogout, onNavigate }: HomePageProps) {
             ) : recentGames.length > 0 ? (
               <div className="game-grid">
                 {recentGames.map((entry) => (
-                  <article className="game-card" key={entry.id}>
+                  <article
+                    className="game-card clickable-card"
+                    key={entry.id}
+                    onClick={() => entry.game && onOpenGame(entry.game.id)}
+                  >
                     <GameArtwork game={entry.game} />
                     <div>
                       <h3>{entry.game?.name ?? `Juego #${entry.gameId}`}</h3>
@@ -200,7 +212,11 @@ function HomePage({ activeScreen, user, onLogout, onNavigate }: HomePageProps) {
             {catalogPreview.length > 0 ? (
               <div className="catalog-list">
                 {catalogPreview.map((game) => (
-                  <article className="catalog-row" key={game.id}>
+                  <article
+                    className="catalog-row clickable-card"
+                    key={game.id}
+                    onClick={() => onOpenGame(game.id)}
+                  >
                     <GameArtwork game={game} size="small" />
                     <div>
                       <h3>{game.name}</h3>
