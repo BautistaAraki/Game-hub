@@ -43,6 +43,15 @@ export type RawgGameResponse = {
   rating: number | null;
 };
 
+export type ExternalGameSearchResponse = {
+  source: string;
+  externalId: string;
+  title: string;
+  description: string | null;
+  imageUrl: string | null;
+  releaseDate: string | null;
+};
+
 type ApiErrorResponse = {
   message?: string;
 };
@@ -100,9 +109,31 @@ export function searchRawgGames(query: string) {
   );
 }
 
+export function searchExternalGames(query: string) {
+  return request<ExternalGameSearchResponse[]>(
+    `/api/external-games/search?query=${encodeURIComponent(query)}`
+  );
+}
+
 export function addGameToLibrary(userId: number, gameId: number) {
   return request<UserGameResponse>("/api/library", {
     method: "POST",
     body: JSON.stringify({ userId, gameId })
+  });
+}
+
+export function addExternalGameToLibrary(
+  userId: number,
+  game: ExternalGameSearchResponse
+) {
+  return request<UserGameResponse>("/api/external-games/library", {
+    method: "POST",
+    body: JSON.stringify({
+      userId,
+      source: game.source,
+      externalId: game.externalId,
+      title: game.title,
+      imageUrl: game.imageUrl
+    })
   });
 }

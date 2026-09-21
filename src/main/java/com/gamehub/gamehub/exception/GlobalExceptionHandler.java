@@ -69,6 +69,14 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.BAD_GATEWAY, exception.getMessage(), request);
     }
 
+    @ExceptionHandler(ExternalGameIntegrationException.class)
+    public ResponseEntity<ApiErrorResponse> handleExternalGameIntegration(
+            ExternalGameIntegrationException exception,
+            HttpServletRequest request
+    ) {
+        return buildResponse(HttpStatus.BAD_GATEWAY, exception.getMessage(), request);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiErrorResponse> handleInvalidArgument(
             IllegalArgumentException exception,
