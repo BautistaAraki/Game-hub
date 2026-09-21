@@ -1,0 +1,5 @@
+ALTER TABLE game
+    ADD COLUMN description VARCHAR(4000) NULL,
+    ADD COLUMN release_date VARCHAR(255) NULL,
+    ADD COLUMN platforms VARCHAR(1000) NULL,
+    ADD COLUMN external_source VARCHAR(255) NULL;

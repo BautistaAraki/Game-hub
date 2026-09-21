@@ -40,7 +40,11 @@ public class GameService {
         return new GameResponse(
                 game.getId(),
                 game.getName(),
-                game.getImageUrl()
+                game.getImageUrl(),
+                game.getDescription(),
+                game.getReleaseDate(),
+                game.getPlatforms(),
+                game.getExternalSource()
         );
     }
 }

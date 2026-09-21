@@ -10,6 +10,10 @@ export type GameResponse = {
   id: number;
   name: string;
   imageUrl: string | null;
+  description: string | null;
+  releaseDate: string | null;
+  platforms: string | null;
+  externalSource: string | null;
 };
 
 export type UserGameResponse = {
@@ -50,6 +54,7 @@ export type ExternalGameSearchResponse = {
   description: string | null;
   imageUrl: string | null;
   releaseDate: string | null;
+  platforms: string[];
 };
 
 type ApiErrorResponse = {
@@ -133,7 +138,10 @@ export function addExternalGameToLibrary(
       source: game.source,
       externalId: game.externalId,
       title: game.title,
-      imageUrl: game.imageUrl
+      imageUrl: game.imageUrl,
+      description: game.description,
+      releaseDate: game.releaseDate,
+      platforms: game.platforms
     })
   });
 }

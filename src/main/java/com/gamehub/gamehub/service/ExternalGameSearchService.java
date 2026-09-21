@@ -5,7 +5,7 @@ import com.gamehub.gamehub.dto.ExternalGameSearchResponse;
 import com.gamehub.gamehub.dto.UserGameResponse;
 import com.gamehub.gamehub.exception.GameAlreadyInLibraryException;
 import com.gamehub.gamehub.exception.ResourceNotFoundException;
-import com.gamehub.gamehub.integration.gamelegend.GameLegendClient;
+import com.gamehub.gamehub.integration.externalgames.ExternalGameClient;
 import com.gamehub.gamehub.model.ExternalGameId;
 import com.gamehub.gamehub.model.Game;
 import com.gamehub.gamehub.model.Platform;
@@ -22,20 +22,20 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ExternalGameSearchService {
 
-    private final GameLegendClient gameLegendClient;
+    private final ExternalGameClient externalGameClient;
     private final ExternalGameIdRepository externalGameIdRepository;
     private final GameRepository gameRepository;
     private final UserGameRepository userGameRepository;
     private final UserRepository userRepository;
 
     public ExternalGameSearchService(
-            GameLegendClient gameLegendClient,
+            ExternalGameClient externalGameClient,
             ExternalGameIdRepository externalGameIdRepository,
             GameRepository gameRepository,
             UserGameRepository userGameRepository,
             UserRepository userRepository
     ) {
-        this.gameLegendClient = gameLegendClient;
+        this.externalGameClient = externalGameClient;
         this.externalGameIdRepository = externalGameIdRepository;
         this.gameRepository = gameRepository;
         this.userGameRepository = userGameRepository;
@@ -48,7 +48,7 @@ public class ExternalGameSearchService {
             throw new IllegalArgumentException("El nombre del juego es obligatorio");
         }
 
-        return gameLegendClient.searchGames(query.trim());
+        return externalGameClient.searchGames(query.trim());
     }
 
     @Transactional
@@ -60,10 +60,29 @@ public class ExternalGameSearchService {
         String externalId = request.externalId().trim();
         String title = request.title().trim();
         String imageUrl = normalizeBlank(request.imageUrl());
+        String description = normalizeBlank(request.description());
+        String releaseDate = normalizeBlank(request.releaseDate());
+        String platforms = normalizePlatforms(request.platforms());
 
         Game game = externalGameIdRepository.findByPlatformAndExternalId(platform, externalId)
                 .map(ExternalGameId::getGame)
-                .orElseGet(() -> createGame(platform, externalId, title, imageUrl));
+                .orElseGet(() -> createGame(
+                        platform,
+                        externalId,
+                        title,
+                        imageUrl,
+                        description,
+                        releaseDate,
+                        platforms
+                ));
+
+        game.updateExternalMetadata(
+                imageUrl,
+                description,
+                releaseDate,
+                platforms,
+                platform.name()
+        );
 
         if (userGameRepository.existsByUser_IdAndGame_Id(user.getId(), game.getId())) {
             throw new GameAlreadyInLibraryException();
@@ -79,11 +98,21 @@ public class ExternalGameSearchService {
             Platform platform,
             String externalId,
             String title,
-            String imageUrl
+            String imageUrl,
+            String description,
+            String releaseDate,
+            String platforms
     ) {
         Game game = gameRepository.findByNameIgnoreCase(title)
                 .orElseGet(() -> new Game(title, imageUrl));
 
+        game.updateExternalMetadata(
+                imageUrl,
+                description,
+                releaseDate,
+                platforms,
+                platform.name()
+        );
         game.addExternalID(new ExternalGameId(platform, externalId));
 
         return gameRepository.save(game);
@@ -103,6 +132,20 @@ public class ExternalGameSearchService {
         }
 
         return value.trim();
+    }
+
+    private String normalizePlatforms(List<String> platforms) {
+        if (platforms == null || platforms.isEmpty()) {
+            return null;
+        }
+
+        String value = String.join(", ", platforms.stream()
+                .filter(platform -> platform != null && !platform.isBlank())
+                .map(String::trim)
+                .distinct()
+                .toList());
+
+        return normalizeBlank(value);
     }
 
     private UserGameResponse toResponse(UserGame userGame) {

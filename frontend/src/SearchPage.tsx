@@ -86,8 +86,9 @@ function SearchPage({ activeScreen, user, onLogout, onOpenGame, onNavigate }: Se
     setMessage("");
 
     try {
-      await addExternalGameToLibrary(user.id, game);
+      const response = await addExternalGameToLibrary(user.id, game);
       setMessage(`${game.title} se agrego a tu biblioteca.`);
+      onOpenGame(response.gameId);
     } catch (requestError) {
       setMessage(
         requestError instanceof Error
@@ -206,6 +207,9 @@ function SearchPage({ activeScreen, user, onLogout, onOpenGame, onNavigate }: Se
                       <p>
                         {game.releaseDate ?? "Sin fecha"} · {game.source}
                       </p>
+                      {game.platforms.length > 0 && (
+                        <p>{game.platforms.slice(0, 3).join(", ")}</p>
+                      )}
                     </div>
                     <button type="button" onClick={() => handleAddExternalGame(game)}>
                       Agregar

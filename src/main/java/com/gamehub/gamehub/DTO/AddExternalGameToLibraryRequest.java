@@ -2,6 +2,7 @@ package com.gamehub.gamehub.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 
 public record AddExternalGameToLibraryRequest(
         @NotNull(message = "El userId es obligatorio")
@@ -16,6 +17,12 @@ public record AddExternalGameToLibraryRequest(
         @NotBlank(message = "El titulo del juego es obligatorio")
         String title,
 
-        String imageUrl
+        String imageUrl,
+
+        String description,
+
+        String releaseDate,
+
+        List<String> platforms
 ) {
 }

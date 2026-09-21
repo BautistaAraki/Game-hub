@@ -723,6 +723,26 @@ input:focus {
   color: #b7bac9;
 }
 
+.platform-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.platform-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  color: #ffffff;
+  background: #181a28;
+  padding: 0 10px;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
 .detail-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(280px, 0.65fr);

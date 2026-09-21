@@ -140,10 +140,18 @@ function GameDetailPage({
                 <p className="section-kicker">GameHub</p>
                 <h2>{selectedGame.name}</h2>
                 <p>
-                  Este juego esta guardado en el catalogo global de GameHub. Si fue
-                  agregado manualmente y todavia no tenemos informacion externa, el detalle
-                  se muestra igual con datos basicos y sin romper la experiencia.
+                  {selectedGame.description
+                    ?? "Este juego esta guardado en el catalogo global de GameHub. Si fue agregado manualmente y todavia no tenemos informacion externa, el detalle se muestra igual con datos basicos y sin romper la experiencia."}
                 </p>
+                {selectedGame.platforms && (
+                  <div className="platform-chip-row">
+                    {selectedGame.platforms.split(",").map((platform) => (
+                      <span className="platform-chip" key={platform.trim()}>
+                        {platform.trim()}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             </section>
 
@@ -181,8 +189,8 @@ function GameDetailPage({
                 <h2>Informacion disponible</h2>
                 <dl className="detail-list">
                   <div>
-                    <dt>ID local</dt>
-                    <dd>{selectedGame.id}</dd>
+                    <dt>Lanzamiento</dt>
+                    <dd>{selectedGame.releaseDate ?? "Sin fecha"}</dd>
                   </div>
                   <div>
                     <dt>Imagen</dt>
@@ -190,7 +198,11 @@ function GameDetailPage({
                   </div>
                   <div>
                     <dt>Origen</dt>
-                    <dd>Catalogo GameHub</dd>
+                    <dd>{selectedGame.externalSource ?? "Catalogo GameHub"}</dd>
+                  </div>
+                  <div>
+                    <dt>ID local</dt>
+                    <dd>{selectedGame.id}</dd>
                   </div>
                 </dl>
               </article>

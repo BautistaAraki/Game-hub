@@ -21,6 +21,16 @@ public class Game {
 
     private String imageUrl;
 
+    @Column(length = 4000)
+    private String description;
+
+    private String releaseDate;
+
+    @Column(length = 1000)
+    private String platforms;
+
+    private String externalSource;
+
     protected Game() {
     }
 
@@ -43,6 +53,50 @@ public class Game {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public String getPlatforms() {
+        return platforms;
+    }
+
+    public String getExternalSource() {
+        return externalSource;
+    }
+
+    public void updateExternalMetadata(
+            String imageUrl,
+            String description,
+            String releaseDate,
+            String platforms,
+            String externalSource
+    ) {
+        if (this.imageUrl == null || this.imageUrl.isBlank()) {
+            this.imageUrl = imageUrl;
+        }
+
+        if (this.description == null || this.description.isBlank()) {
+            this.description = description;
+        }
+
+        if (this.releaseDate == null || this.releaseDate.isBlank()) {
+            this.releaseDate = releaseDate;
+        }
+
+        if (this.platforms == null || this.platforms.isBlank()) {
+            this.platforms = platforms;
+        }
+
+        if (this.externalSource == null || this.externalSource.isBlank()) {
+            this.externalSource = externalSource;
+        }
     }
 
     @OneToMany(
