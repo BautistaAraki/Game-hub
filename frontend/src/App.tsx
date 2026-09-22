@@ -5,6 +5,7 @@ import HomePage from "./HomePage";
 import LibraryPage from "./LibraryPage";
 import { AppScreen } from "./navigation";
 import SearchPage from "./SearchPage";
+import StatsPage from "./StatsPage";
 
 type AuthMode = "login" | "register";
 
@@ -20,10 +21,12 @@ const initialForm: FormState = {
   password: ""
 };
 
+const SESSION_STORAGE_KEY = "gamehub.user";
+
 function App() {
   const [mode, setMode] = useState<AuthMode>("login");
   const [form, setForm] = useState<FormState>(initialForm);
-  const [user, setUser] = useState<UserResponse | null>(null);
+  const [user, setUser] = useState<UserResponse | null>(() => readStoredUser());
   const [screen, setScreen] = useState<AppScreen>("home");
   const [selectedGameId, setSelectedGameId] = useState<number | null>(null);
   const [error, setError] = useState("");
@@ -54,6 +57,7 @@ function App() {
         : await register(form.username, form.email, form.password);
 
       setUser(response);
+      storeUser(response);
       setScreen("home");
       setSelectedGameId(null);
       setForm(initialForm);
@@ -71,6 +75,7 @@ function App() {
     }
 
     function logout() {
+      clearStoredUser();
       setUser(null);
       setSelectedGameId(null);
       setScreen("home");
@@ -94,6 +99,17 @@ function App() {
           activeScreen={screen}
           onLogout={logout}
           onOpenGame={openGameDetail}
+          onNavigate={setScreen}
+          user={user}
+        />
+      );
+    }
+
+    if (screen === "stats") {
+      return (
+        <StatsPage
+          activeScreen={screen}
+          onLogout={logout}
           onNavigate={setScreen}
           user={user}
         />
@@ -222,6 +238,38 @@ function App() {
       </section>
     </main>
   );
+}
+
+function readStoredUser() {
+  const storedValue = window.localStorage.getItem(SESSION_STORAGE_KEY);
+
+  if (!storedValue) {
+    return null;
+  }
+
+  try {
+    const parsedValue = JSON.parse(storedValue) as UserResponse;
+
+    if (
+      typeof parsedValue.id === "number"
+      && typeof parsedValue.username === "string"
+      && typeof parsedValue.email === "string"
+    ) {
+      return parsedValue;
+    }
+  } catch {
+    window.localStorage.removeItem(SESSION_STORAGE_KEY);
+  }
+
+  return null;
+}
+
+function storeUser(user: UserResponse) {
+  window.localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(user));
+}
+
+function clearStoredUser() {
+  window.localStorage.removeItem(SESSION_STORAGE_KEY);
 }
 
 export default App;

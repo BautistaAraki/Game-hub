@@ -697,6 +697,13 @@ select:focus {
   padding: 26px;
 }
 
+.stats-page {
+  display: grid;
+  gap: 22px;
+  align-content: start;
+  padding: 26px;
+}
+
 .library-toolbar {
   display: grid;
   grid-template-columns: minmax(240px, 1fr) minmax(180px, 0.35fr) minmax(180px, 0.35fr);
@@ -712,6 +719,68 @@ select:focus {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
+}
+
+.stats-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.stats-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.stats-panel {
+  display: grid;
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  background: #11131d;
+}
+
+.status-bars {
+  display: grid;
+  gap: 16px;
+}
+
+.status-bar-row {
+  display: grid;
+  gap: 8px;
+}
+
+.status-bar-row div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.status-bar-row span {
+  color: #d7d9e5;
+  font-weight: 800;
+}
+
+.status-bar-row strong {
+  color: #ffffff;
+}
+
+.status-track {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #080911;
+}
+
+.status-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #7558ff;
 }
 
 .library-grid {
@@ -983,6 +1052,8 @@ select:focus {
   .search-results-grid,
   .library-toolbar,
   .library-summary-row,
+  .stats-metric-grid,
+  .stats-layout,
   .detail-hero,
   .detail-grid {
     grid-template-columns: 1fr;
@@ -1037,6 +1108,7 @@ select:focus {
   .auth-panel,
   .home-page,
   .library-page,
+  .stats-page,
   .detail-page {
     padding: 22px;
   }

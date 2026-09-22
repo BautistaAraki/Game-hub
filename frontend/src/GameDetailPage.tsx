@@ -162,7 +162,13 @@ function GameDetailPage({
           >
             Buscar
           </button>
-          <button className="nav-item" type="button">Estadisticas</button>
+          <button
+            className={activeScreen === "stats" ? "nav-item active" : "nav-item"}
+            onClick={() => onNavigate("stats")}
+            type="button"
+          >
+            Estadisticas
+          </button>
           <button className="nav-item" type="button">Ajustes</button>
         </nav>
         <div className="sidebar-user">
