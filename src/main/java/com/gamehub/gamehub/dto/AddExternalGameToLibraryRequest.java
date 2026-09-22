@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public record AddExternalGameToLibraryRequest(
-        @NotNull(message = "El userId es obligatorio")
         Long userId,
 
         @NotBlank(message = "La fuente externa es obligatoria")

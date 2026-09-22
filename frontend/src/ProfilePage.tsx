@@ -54,8 +54,8 @@ function ProfilePage({
       try {
         const [catalogResponse, libraryResponse, statsResponse] = await Promise.all([
           getCatalog(),
-          getUserLibrary(user.id),
-          getLibraryStats(user.id)
+          getUserLibrary(),
+          getLibraryStats()
         ]);
 
         if (!isMounted) {

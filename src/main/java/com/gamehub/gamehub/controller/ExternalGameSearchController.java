@@ -3,9 +3,11 @@ package com.gamehub.gamehub.controller;
 import com.gamehub.gamehub.dto.AddExternalGameToLibraryRequest;
 import com.gamehub.gamehub.dto.ExternalGameSearchResponse;
 import com.gamehub.gamehub.dto.UserGameResponse;
+import com.gamehub.gamehub.security.GameHubPrincipal;
 import com.gamehub.gamehub.service.ExternalGameSearchService;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,8 +34,9 @@ public class ExternalGameSearchController {
 
     @PostMapping("/library")
     public UserGameResponse addToLibrary(
-            @Valid @RequestBody AddExternalGameToLibraryRequest request
+            @Valid @RequestBody AddExternalGameToLibraryRequest request,
+            @AuthenticationPrincipal GameHubPrincipal principal
     ) {
-        return externalGameSearchService.addToLibrary(request);
+        return externalGameSearchService.addToLibrary(principal.id(), request);
     }
 }

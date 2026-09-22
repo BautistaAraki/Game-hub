@@ -16,6 +16,8 @@ import com.gamehub.gamehub.repository.UserRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.test.util.ReflectionTestUtils;
 
 class UserGameServiceTest {
 
@@ -44,8 +46,10 @@ class UserGameServiceTest {
 
     @Test
     void updateRatingRejectsInvalidRatingAndDoesNotSave() {
+        User user = new User("bauti", "bauti@example.com", "hash");
+        ReflectionTestUtils.setField(user, "id", 1L);
         UserGame userGame = new UserGame(
-                new User("bauti", "bauti@example.com", "hash"),
+                user,
                 new Game("Minecraft", "https://example.com/minecraft.jpg")
         );
 
@@ -53,10 +57,29 @@ class UserGameServiceTest {
 
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> userGameService.updateRating(2L, 15)
+                () -> userGameService.updateRating(1L, 2L, 15)
         );
 
         assertEquals("El rating debe estar entre 1 y 10", exception.getMessage());
+        verify(userGameRepository, never()).save(userGame);
+    }
+
+    @Test
+    void updateRatingRejectsUserGameFromAnotherUser() {
+        User user = new User("bauti", "bauti@example.com", "hash");
+        ReflectionTestUtils.setField(user, "id", 1L);
+        UserGame userGame = new UserGame(
+                user,
+                new Game("Minecraft", "https://example.com/minecraft.jpg")
+        );
+
+        when(userGameRepository.findById(2L)).thenReturn(Optional.of(userGame));
+
+        assertThrows(
+                AccessDeniedException.class,
+                () -> userGameService.updateRating(99L, 2L, 8)
+        );
+
         verify(userGameRepository, never()).save(userGame);
     }
 

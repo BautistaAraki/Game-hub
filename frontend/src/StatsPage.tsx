@@ -27,7 +27,7 @@ function StatsPage({ activeScreen, user, onLogout, onNavigate }: StatsPageProps)
       setError("");
 
       try {
-        const response = await getLibraryStats(user.id);
+        const response = await getLibraryStats();
 
         if (isMounted) {
           setStats(response);

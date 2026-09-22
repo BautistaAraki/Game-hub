@@ -52,8 +52,8 @@ public class ExternalGameSearchService {
     }
 
     @Transactional
-    public UserGameResponse addToLibrary(AddExternalGameToLibraryRequest request) {
-        User user = userRepository.findById(request.userId())
+    public UserGameResponse addToLibrary(Long authenticatedUserId, AddExternalGameToLibraryRequest request) {
+        User user = userRepository.findById(authenticatedUserId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
         Platform platform = toPlatform(request.source());

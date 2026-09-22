@@ -24,14 +24,14 @@ test('search encodes input and GET does not force a JSON content type', async ()
   assert.deepEqual(await api.searchCatalog('a&b'), []);
 });
 
-test('POST retains JSON headers and user/game identifiers', async () => {
+test('POST retains JSON headers and sends game identifier', async () => {
   const api = apiWith(async (url, options) => {
     assert.equal(options.method, 'POST');
     assert.equal(options.headers.get('Content-Type'), 'application/json');
-    assert.deepEqual(JSON.parse(options.body), { userId: 1, gameId: 2 });
+    assert.deepEqual(JSON.parse(options.body), { gameId: 2 });
     return new Response('{"id":3}');
   });
-  assert.deepEqual(await api.addGameToLibrary(1, 2), { id: 3 });
+  assert.deepEqual(await api.addGameToLibrary(2), { id: 3 });
 });
 
 test('authenticated requests send bearer token', async () => {

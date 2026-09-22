@@ -148,8 +148,19 @@ Si `query` esta vacio o no se envia, devuelve el catalogo completo.
 ### Listar biblioteca de un usuario
 
 ```http
+GET /api/library/me
+Authorization: Bearer jwt...
+```
+
+Este es el endpoint recomendado para el frontend. El usuario se toma del token.
+
+Endpoint compatible:
+
+```http
 GET /api/library/users/{userId}
 ```
+
+Si `{userId}` no coincide con el usuario del token, devuelve `403`.
 
 Respuesta:
 
@@ -172,14 +183,16 @@ Respuesta:
 ```http
 POST /api/library
 Content-Type: application/json
+Authorization: Bearer jwt...
 ```
 
 ```json
 {
-  "userId": 1,
   "gameId": 1
 }
 ```
+
+El usuario se toma del token. Si un cliente viejo envia `userId`, el backend lo ignora.
 
 Si el usuario ya tiene ese juego, devuelve `409`.
 
@@ -187,14 +200,17 @@ Si el usuario ya tiene ese juego, devuelve `409`.
 
 ```http
 PATCH /api/library/{userGameId}/rating?rating=8
+Authorization: Bearer jwt...
 ```
 
 El rating valido va de `1` a `10`.
+Si el `UserGame` pertenece a otro usuario, devuelve `403`.
 
 ### Actualizar estado
 
 ```http
 PATCH /api/library/{userGameId}/status?status=PLAYING
+Authorization: Bearer jwt...
 ```
 
 Estados validos:
@@ -209,18 +225,21 @@ Estados validos:
 
 ```http
 PATCH /api/library/{userGameId}/favorite
+Authorization: Bearer jwt...
 ```
 
 ### Quitar de favoritos
 
 ```http
 PATCH /api/library/{userGameId}/unfavorite
+Authorization: Bearer jwt...
 ```
 
 ### Eliminar juego de biblioteca
 
 ```http
 DELETE /api/library/{userGameId}
+Authorization: Bearer jwt...
 ```
 
 ## Estadisticas
@@ -228,8 +247,17 @@ DELETE /api/library/{userGameId}
 ### Obtener estadisticas de biblioteca
 
 ```http
+GET /api/library/me/stats
+Authorization: Bearer jwt...
+```
+
+Endpoint compatible:
+
+```http
 GET /api/library/users/{userId}/stats
 ```
+
+Si `{userId}` no coincide con el usuario del token, devuelve `403`.
 
 Respuesta:
 
@@ -253,9 +281,20 @@ Respuesta:
 ### Vincular cuenta de Steam
 
 ```http
+POST /api/me/external-accounts/steam
+Content-Type: application/json
+Authorization: Bearer jwt...
+```
+
+Endpoint compatible:
+
+```http
 POST /api/users/{userId}/external-accounts/steam
 Content-Type: application/json
+Authorization: Bearer jwt...
 ```
+
+Si `{userId}` no coincide con el usuario del token, devuelve `403`.
 
 ```json
 {
@@ -289,8 +328,18 @@ Requiere `STEAM_API_KEY`.
 ### Importar biblioteca de Steam
 
 ```http
-POST /api/steam/users/{userId}/import-library
+POST /api/steam/me/import-library
+Authorization: Bearer jwt...
 ```
+
+Endpoint compatible:
+
+```http
+POST /api/steam/users/{userId}/import-library
+Authorization: Bearer jwt...
+```
+
+Si `{userId}` no coincide con el usuario del token, devuelve `403`.
 
 Requiere:
 
@@ -402,11 +451,11 @@ Respuesta 200:
 ```http
 POST /api/external-games/library
 Content-Type: application/json
+Authorization: Bearer jwt...
 ```
 
 ```json
 {
-  "userId": 1,
   "source": "IGDB",
   "externalId": "121",
   "title": "Minecraft",
@@ -417,4 +466,4 @@ Content-Type: application/json
 }
 ```
 
-Este endpoint crea o reutiliza el `Game` global, vincula `source + externalId` mediante `ExternalGameId` para evitar duplicados y crea el `UserGame` en la biblioteca del usuario. El endpoint RAWG anterior sigue disponible por compatibilidad.
+Este endpoint crea o reutiliza el `Game` global, vincula `source + externalId` mediante `ExternalGameId` para evitar duplicados y crea el `UserGame` en la biblioteca del usuario autenticado. Si un cliente viejo envia `userId`, el backend lo ignora. El endpoint RAWG anterior sigue disponible por compatibilidad.

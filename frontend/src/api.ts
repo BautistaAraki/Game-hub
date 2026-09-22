@@ -120,12 +120,12 @@ export function searchCatalog(query: string, signal?: AbortSignal) {
   return request<GameResponse[]>(`/api/games/search?query=${encodeURIComponent(query)}`, { signal });
 }
 
-export function getUserLibrary(userId: number) {
-  return request<UserGameResponse[]>(`/api/library/users/${userId}`);
+export function getUserLibrary() {
+  return request<UserGameResponse[]>("/api/library/me");
 }
 
-export function getLibraryStats(userId: number) {
-  return request<LibraryStatsResponse>(`/api/library/users/${userId}/stats`);
+export function getLibraryStats() {
+  return request<LibraryStatsResponse>("/api/library/me/stats");
 }
 
 export function searchExternalGames(query: string, signal?: AbortSignal) {
@@ -135,21 +135,19 @@ export function searchExternalGames(query: string, signal?: AbortSignal) {
   );
 }
 
-export function addGameToLibrary(userId: number, gameId: number) {
+export function addGameToLibrary(gameId: number) {
   return request<UserGameResponse>("/api/library", {
     method: "POST",
-    body: JSON.stringify({ userId, gameId })
+    body: JSON.stringify({ gameId })
   });
 }
 
 export function addExternalGameToLibrary(
-  userId: number,
   game: ExternalGameSearchResponse
 ) {
   return request<UserGameResponse>("/api/external-games/library", {
     method: "POST",
     body: JSON.stringify({
-      userId,
       source: game.source,
       externalId: game.externalId,
       title: game.title,

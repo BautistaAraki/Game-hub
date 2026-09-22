@@ -61,7 +61,7 @@ function LibraryPage({
       try {
         const [catalogResponse, libraryResponse] = await Promise.all([
           getCatalog(),
-          getUserLibrary(user.id)
+          getUserLibrary()
         ]);
 
         if (!isMounted) {

@@ -86,7 +86,7 @@ class ExternalGameSearchServiceTest {
         });
 
         AddExternalGameToLibraryRequest request = new AddExternalGameToLibraryRequest(
-                1L,
+                99L,
                 "IGDB",
                 "1020",
                 "Minecraft",
@@ -96,7 +96,7 @@ class ExternalGameSearchServiceTest {
                 List.of("Windows", "macOS")
         );
 
-        UserGameResponse response = externalGameSearchService.addToLibrary(request);
+        UserGameResponse response = externalGameSearchService.addToLibrary(1L, request);
 
         assertEquals(20L, response.id());
         assertEquals(1L, response.userId());

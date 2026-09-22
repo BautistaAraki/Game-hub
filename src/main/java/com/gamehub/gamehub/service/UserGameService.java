@@ -11,6 +11,7 @@ import com.gamehub.gamehub.repository.GameRepository;
 import java.util.List;
 import com.gamehub.gamehub.repository.UserGameRepository;
 import com.gamehub.gamehub.repository.UserRepository;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,8 +66,8 @@ public class UserGameService {
     }
 
     @Transactional
-    public UserGameResponse updateRating(Long userGameId, Integer rating) {
-        UserGame userGame = findUserGame(userGameId);
+    public UserGameResponse updateRating(Long authenticatedUserId, Long userGameId, Integer rating) {
+        UserGame userGame = findOwnedUserGame(authenticatedUserId, userGameId);
 
         userGame.setRating(rating);
         UserGame savedUserGame = userGameRepository.save(userGame);
@@ -75,8 +76,8 @@ public class UserGameService {
     }
 
     @Transactional
-    public UserGameResponse updateStatus(Long userGameId, GameStatus status) {
-        UserGame userGame = findUserGame(userGameId);
+    public UserGameResponse updateStatus(Long authenticatedUserId, Long userGameId, GameStatus status) {
+        UserGame userGame = findOwnedUserGame(authenticatedUserId, userGameId);
 
         userGame.changeStatus(status);
         UserGame savedUserGame = userGameRepository.save(userGame);
@@ -85,8 +86,8 @@ public class UserGameService {
     }
 
     @Transactional
-    public UserGameResponse addToFavorites(Long userGameId) {
-        UserGame userGame = findUserGame(userGameId);
+    public UserGameResponse addToFavorites(Long authenticatedUserId, Long userGameId) {
+        UserGame userGame = findOwnedUserGame(authenticatedUserId, userGameId);
 
         userGame.markAsFavorite();
         UserGame savedUserGame = userGameRepository.save(userGame);
@@ -95,8 +96,8 @@ public class UserGameService {
     }
 
     @Transactional
-    public UserGameResponse removeFromFavorites(Long userGameId) {
-        UserGame userGame = findUserGame(userGameId);
+    public UserGameResponse removeFromFavorites(Long authenticatedUserId, Long userGameId) {
+        UserGame userGame = findOwnedUserGame(authenticatedUserId, userGameId);
 
         userGame.removeFromFavorites();
         UserGame savedUserGame = userGameRepository.save(userGame);
@@ -105,8 +106,8 @@ public class UserGameService {
     }
 
     @Transactional
-    public void removeGame(Long userGameId) {
-        UserGame userGame = findUserGame(userGameId);
+    public void removeGame(Long authenticatedUserId, Long userGameId) {
+        UserGame userGame = findOwnedUserGame(authenticatedUserId, userGameId);
 
         userGameRepository.delete(userGame);
     }
@@ -116,6 +117,16 @@ public class UserGameService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Juego de biblioteca no encontrado")
                 );
+    }
+
+    private UserGame findOwnedUserGame(Long authenticatedUserId, Long userGameId) {
+        UserGame userGame = findUserGame(userGameId);
+
+        if (!userGame.getUserId().equals(authenticatedUserId)) {
+            throw new AccessDeniedException("No tenes permiso para modificar este juego");
+        }
+
+        return userGame;
     }
 
     private UserGameResponse toResponse(UserGame userGame) {

@@ -72,7 +72,7 @@ function SearchPage({ activeScreen, user, onLogout, onOpenGame, onNavigate }: Se
     setMessage("");
 
     try {
-      await addGameToLibrary(user.id, game.id);
+      await addGameToLibrary(game.id);
       setMessage(`${game.name} se agrego a tu biblioteca.`);
     } catch (requestError) {
       setMessage(
@@ -87,7 +87,7 @@ function SearchPage({ activeScreen, user, onLogout, onOpenGame, onNavigate }: Se
     setMessage("");
 
     try {
-      const response = await addExternalGameToLibrary(user.id, game);
+      const response = await addExternalGameToLibrary(game);
       setMessage(`${game.title} se agrego a tu biblioteca.`);
       onOpenGame(response.gameId);
     } catch (requestError) {
