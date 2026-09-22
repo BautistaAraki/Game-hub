@@ -3,6 +3,8 @@ import {
   GameResponse,
   getCatalog,
   getUserLibrary,
+  markLibraryGameAsFavorite,
+  unmarkLibraryGameAsFavorite,
   UserGameResponse,
   UserResponse
 } from "./api";
@@ -44,6 +46,8 @@ function LibraryPage({
   const [statusFilter, setStatusFilter] = useState<UserGameResponse["status"] | "ALL">("ALL");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const [savingEntryId, setSavingEntryId] = useState<number | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -51,6 +55,7 @@ function LibraryPage({
     async function loadLibrary() {
       setIsLoading(true);
       setError("");
+      setMessage("");
 
       try {
         const [catalogResponse, libraryResponse] = await Promise.all([
@@ -85,6 +90,42 @@ function LibraryPage({
       isMounted = false;
     };
   }, [user.id]);
+
+  async function handleFavoriteToggle(entry: LibraryGame) {
+    await updateLibraryEntry(
+      entry.id,
+      () => entry.favorite
+        ? unmarkLibraryGameAsFavorite(entry.id)
+        : markLibraryGameAsFavorite(entry.id),
+      entry.favorite ? "Quitado de favoritos" : "Marcado como favorito"
+    );
+  }
+
+  async function updateLibraryEntry(
+    entryId: number,
+    requestUpdate: () => Promise<UserGameResponse>,
+    successMessage: string
+  ) {
+    setSavingEntryId(entryId);
+    setError("");
+    setMessage("");
+
+    try {
+      const updatedEntry = await requestUpdate();
+      setLibrary((current) =>
+        current.map((entry) => entry.id === updatedEntry.id ? updatedEntry : entry)
+      );
+      setMessage(successMessage);
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error
+          ? requestError.message
+          : "No se pudo actualizar el juego"
+      );
+    } finally {
+      setSavingEntryId(null);
+    }
+  }
 
   const gameById = useMemo(() => {
     return new Map(catalog.map((game) => [game.id, game]));
@@ -201,6 +242,7 @@ function LibraryPage({
         </section>
 
         {error && <p className="form-message error">{error}</p>}
+        {message && <p className="form-message success">{message}</p>}
 
         <section className="library-summary-row" aria-label="Resumen">
           <Metric label="Mostrando" value={libraryGames.length} />
@@ -224,7 +266,22 @@ function LibraryPage({
                 key={entry.id}
                 onClick={() => entry.game && onOpenGame(entry.game.id)}
               >
-                <GameArtwork game={entry.game} />
+                <div className="library-cover-wrap">
+                  <GameArtwork game={entry.game} />
+                  <button
+                    aria-label={entry.favorite ? "Quitar de favoritos" : "Marcar como favorito"}
+                    className={entry.favorite ? "favorite-toggle active" : "favorite-toggle"}
+                    disabled={savingEntryId === entry.id}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      handleFavoriteToggle(entry);
+                    }}
+                    title={entry.favorite ? "Quitar de favoritos" : "Marcar como favorito"}
+                    type="button"
+                  >
+                    ★
+                  </button>
+                </div>
                 <div className="library-card-body">
                   <div>
                     <h2>{entry.game?.name ?? `Juego #${entry.gameId}`}</h2>

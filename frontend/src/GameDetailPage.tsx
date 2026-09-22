@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import {
+  GameStatus,
   GameResponse,
   getCatalog,
   getUserLibrary,
+  updateLibraryGameRating,
+  updateLibraryGameStatus,
   UserGameResponse,
   UserResponse
 } from "./api";
@@ -35,6 +38,8 @@ function GameDetailPage({
   const [library, setLibrary] = useState<UserGameResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -42,6 +47,7 @@ function GameDetailPage({
     async function loadDetailData() {
       setIsLoading(true);
       setError("");
+      setMessage("");
 
       try {
         const [catalogResponse, libraryResponse] = await Promise.all([
@@ -84,6 +90,51 @@ function GameDetailPage({
   const libraryEntry = useMemo(() => {
     return library.find((entry) => entry.gameId === gameId) ?? null;
   }, [library, gameId]);
+
+  async function handleStatusChange(entry: UserGameResponse, status: GameStatus) {
+    await updateLibraryEntry(
+      () => updateLibraryGameStatus(entry.id, status),
+      "Estado actualizado"
+    );
+  }
+
+  async function handleRatingChange(entry: UserGameResponse, value: string) {
+    const rating = Number(value);
+
+    if (!Number.isInteger(rating)) {
+      return;
+    }
+
+    await updateLibraryEntry(
+      () => updateLibraryGameRating(entry.id, rating),
+      "Rating actualizado"
+    );
+  }
+
+  async function updateLibraryEntry(
+    requestUpdate: () => Promise<UserGameResponse>,
+    successMessage: string
+  ) {
+    setIsSaving(true);
+    setError("");
+    setMessage("");
+
+    try {
+      const updatedEntry = await requestUpdate();
+      setLibrary((current) =>
+        current.map((entry) => entry.id === updatedEntry.id ? updatedEntry : entry)
+      );
+      setMessage(successMessage);
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error
+          ? requestError.message
+          : "No se pudo actualizar el juego"
+      );
+    } finally {
+      setIsSaving(false);
+    }
+  }
 
   return (
     <main className="app-shell">
@@ -135,6 +186,7 @@ function GameDetailPage({
         </header>
 
         {error && <p className="form-message error">{error}</p>}
+        {message && <p className="form-message success">{message}</p>}
 
         {isLoading ? (
           <p className="muted">Cargando detalle...</p>
@@ -143,6 +195,40 @@ function GameDetailPage({
             <section className="detail-hero">
               <GameArtwork game={selectedGame} />
               <div className="detail-summary">
+                {libraryEntry && (
+                  <div className="detail-quick-controls" aria-label="Controles de biblioteca">
+                    <label>
+                      Estado
+                      <select
+                        disabled={isSaving}
+                        onChange={(event) =>
+                          handleStatusChange(libraryEntry, event.target.value as GameStatus)
+                        }
+                        value={libraryEntry.status}
+                      >
+                        <option value="BACKLOG">Backlog</option>
+                        <option value="PLAYING">Jugando</option>
+                        <option value="COMPLETED">Completado</option>
+                        <option value="ON_HOLD">Pausado</option>
+                        <option value="DROPPED">Abandonado</option>
+                      </select>
+                    </label>
+
+                    <label>
+                      Rating
+                      <select
+                        disabled={isSaving}
+                        onChange={(event) => handleRatingChange(libraryEntry, event.target.value)}
+                        value={libraryEntry.rating ?? ""}
+                      >
+                        <option value="" disabled>Sin rating</option>
+                        {Array.from({ length: 10 }, (_, index) => index + 1).map((rating) => (
+                          <option key={rating} value={rating}>{rating}/10</option>
+                        ))}
+                      </select>
+                    </label>
+                  </div>
+                )}
                 <p className="section-kicker">GameHub</p>
                 <h2>{selectedGame.name}</h2>
                 <p>

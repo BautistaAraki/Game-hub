@@ -26,6 +26,8 @@ export type UserGameResponse = {
   status: "BACKLOG" | "PLAYING" | "COMPLETED" | "ON_HOLD" | "DROPPED";
 };
 
+export type GameStatus = UserGameResponse["status"];
+
 export type LibraryStatsResponse = {
   userId: number;
   totalGames: number;
@@ -143,5 +145,31 @@ export function addExternalGameToLibrary(
       releaseDate: game.releaseDate,
       platforms: game.platforms
     })
+  });
+}
+
+export function updateLibraryGameStatus(userGameId: number, status: GameStatus) {
+  return request<UserGameResponse>(
+    `/api/library/${userGameId}/status?status=${encodeURIComponent(status)}`,
+    { method: "PATCH" }
+  );
+}
+
+export function updateLibraryGameRating(userGameId: number, rating: number) {
+  return request<UserGameResponse>(
+    `/api/library/${userGameId}/rating?rating=${encodeURIComponent(rating)}`,
+    { method: "PATCH" }
+  );
+}
+
+export function markLibraryGameAsFavorite(userGameId: number) {
+  return request<UserGameResponse>(`/api/library/${userGameId}/favorite`, {
+    method: "PATCH"
+  });
+}
+
+export function unmarkLibraryGameAsFavorite(userGameId: number) {
+  return request<UserGameResponse>(`/api/library/${userGameId}/unfavorite`, {
+    method: "PATCH"
   });
 }
