@@ -711,6 +711,26 @@ select:focus {
   padding: 26px;
 }
 
+.settings-page {
+  display: grid;
+  gap: 22px;
+  align-content: start;
+  padding: 26px;
+}
+
+.settings-header h1 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.settings-header p:last-child {
+  margin: 8px 0 0;
+  color: #9ba0b5;
+}
+
 .library-toolbar {
   display: grid;
   grid-template-columns: minmax(240px, 1fr) minmax(180px, 0.35fr) minmax(180px, 0.35fr);
@@ -827,6 +847,12 @@ select:focus {
   align-items: start;
 }
 
+.settings-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.72fr);
+  gap: 20px;
+}
+
 .stats-panel {
   display: grid;
   gap: 18px;
@@ -834,6 +860,157 @@ select:focus {
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 8px;
   background: #11131d;
+}
+
+.settings-card {
+  display: grid;
+  gap: 22px;
+  min-width: 0;
+  padding: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  background: #11131d;
+}
+
+.settings-profile-card {
+  grid-column: 1 / -1;
+}
+
+.settings-card-header h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1.18rem;
+  letter-spacing: 0;
+}
+
+.settings-card-header p {
+  margin: 6px 0 0;
+  color: #9ba0b5;
+  font-size: 0.88rem;
+}
+
+.settings-avatar-row {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+
+.settings-avatar {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  flex: 0 0 76px;
+  border-radius: 50%;
+  color: #ffffff;
+  background: #7558ff;
+  font-size: 1.45rem;
+  font-weight: 900;
+}
+
+.settings-avatar-row p {
+  margin: 8px 0 0;
+  color: #9ba0b5;
+  font-size: 0.78rem;
+}
+
+.settings-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.settings-full-field {
+  grid-column: 1 / -1;
+}
+
+.settings-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.settings-stack {
+  display: grid;
+  gap: 16px;
+}
+
+.settings-toggle-list {
+  display: grid;
+  gap: 18px;
+}
+
+.settings-toggle-row {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 52px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.settings-toggle-row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.settings-toggle-row strong {
+  display: block;
+  color: #ffffff;
+  font-size: 0.92rem;
+}
+
+.settings-toggle-row span {
+  display: block;
+  margin-top: 4px;
+  color: #9ba0b5;
+  font-size: 0.8rem;
+}
+
+.settings-security-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.danger-button {
+  min-height: 40px;
+  border: 1px solid rgba(255, 107, 129, 0.32);
+  border-radius: 6px;
+  color: #ffd7dc;
+  background: rgba(228, 68, 94, 0.12);
+  padding: 0 16px;
+  font-weight: 800;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 48px;
+  height: 28px;
+  flex: 0 0 48px;
+  border: 0;
+  border-radius: 999px;
+  background: #2a2d3a;
+  padding: 0;
+}
+
+.toggle-switch span {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  transition: transform 160ms ease;
+}
+
+.toggle-switch.active {
+  background: #7558ff;
+}
+
+.toggle-switch.active span {
+  transform: translateX(20px);
 }
 
 .profile-panel {
@@ -1216,6 +1393,8 @@ select:focus {
   .library-summary-row,
   .stats-metric-grid,
   .stats-layout,
+  .settings-content,
+  .settings-form-grid,
   .profile-hero,
   .profile-layout,
   .profile-meta,
@@ -1279,6 +1458,7 @@ select:focus {
     .home-page,
     .library-page,
     .stats-page,
+    .settings-page,
     .profile-page,
     .detail-page {
       padding: 22px;

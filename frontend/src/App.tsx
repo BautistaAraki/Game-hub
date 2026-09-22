@@ -6,6 +6,7 @@ import LibraryPage from "./LibraryPage";
 import { AppScreen } from "./navigation";
 import ProfilePage from "./ProfilePage";
 import SearchPage from "./SearchPage";
+import SettingsPage from "./SettingsPage";
 import StatsPage from "./StatsPage";
 
 type AuthMode = "login" | "register";
@@ -124,6 +125,17 @@ function App() {
           onLogout={logout}
           onNavigate={setScreen}
           onOpenGame={openGameDetail}
+          user={user}
+        />
+      );
+    }
+
+    if (screen === "settings") {
+      return (
+        <SettingsPage
+          activeScreen={screen}
+          onLogout={logout}
+          onNavigate={setScreen}
           user={user}
         />
       );

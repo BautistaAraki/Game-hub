@@ -13,7 +13,8 @@ const navItems: Array<{ label: string; screen: AppScreen }> = [
   { label: "Biblioteca", screen: "library" },
   { label: "Buscar", screen: "search" },
   { label: "Estadisticas", screen: "stats" },
-  { label: "Perfil", screen: "profile" }
+  { label: "Perfil", screen: "profile" },
+  { label: "Ajustes", screen: "settings" }
 ];
 
 function Sidebar({ activeScreen, user, onLogout, onNavigate }: SidebarProps) {
@@ -31,7 +32,6 @@ function Sidebar({ activeScreen, user, onLogout, onNavigate }: SidebarProps) {
             {item.label}
           </button>
         ))}
-        <button className="nav-item" type="button">Ajustes</button>
       </nav>
       <div className="sidebar-user">
         <span className="avatar">{user.username.slice(0, 1).toUpperCase()}</span>
