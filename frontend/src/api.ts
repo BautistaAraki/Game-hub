@@ -6,6 +6,11 @@ export type UserResponse = {
   email: string;
 };
 
+export type AuthResponse = {
+  token: string;
+  user: UserResponse;
+};
+
 export type GameResponse = {
   id: number;
   name: string;
@@ -55,9 +60,16 @@ type ApiErrorResponse = {
   message?: string;
 };
 
+let authToken: string | null = null;
+
+export function setAuthToken(token: string | null) {
+  authToken = token;
+}
+
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const headers = new Headers(options.headers);
   if (options.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
+  if (authToken && !headers.has("Authorization")) headers.set("Authorization", `Bearer ${authToken}`);
   const timeout = AbortSignal.timeout(60000);
   let response: Response;
   try {
@@ -83,7 +95,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 }
 
 export function login(email: string, password: string) {
-  return request<UserResponse>("/api/auth/login", {
+  return request<AuthResponse>("/api/auth/login", {
     method: "POST",
     body: JSON.stringify({ email: email.trim().toLowerCase(), password })
   });

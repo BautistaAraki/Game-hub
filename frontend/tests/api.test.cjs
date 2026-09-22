@@ -34,6 +34,15 @@ test('POST retains JSON headers and user/game identifiers', async () => {
   assert.deepEqual(await api.addGameToLibrary(1, 2), { id: 3 });
 });
 
+test('authenticated requests send bearer token', async () => {
+  const api = apiWith(async (url, options) => {
+    assert.equal(options.headers.get('Authorization'), 'Bearer jwt-token');
+    return new Response('[]');
+  });
+  api.setAuthToken('jwt-token');
+  assert.deepEqual(await api.getCatalog(), []);
+});
+
 test('accepts empty successful responses', async () => {
   const api = apiWith(async () => new Response(null, { status: 204 }));
   assert.equal(await api.getCatalog(), undefined);

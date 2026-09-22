@@ -98,13 +98,22 @@ Respuesta:
 
 ```json
 {
-  "id": 1,
-  "username": "Bautista",
-  "email": "bauti@example.com"
+  "token": "jwt...",
+  "user": {
+    "id": 1,
+    "username": "Bautista",
+    "email": "bauti@example.com"
+  }
 }
 ```
 
-Nota: este login todavia no devuelve JWT. Eso queda para el bloque de autenticacion con Spring Security.
+El frontend debe enviar el token en los endpoints protegidos:
+
+```http
+Authorization: Bearer jwt...
+```
+
+`POST /api/users` y `POST /api/auth/login` son publicos. El resto de endpoints bajo `/api/**` requiere token.
 
 ## Catalogo
 

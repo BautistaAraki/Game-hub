@@ -39,6 +39,7 @@ Pantalla para visualizar información global del juego y datos personales del us
 ## 🚀 Funcionalidades
 
 - Registro e inicio de sesión de usuarios.
+- Autenticación con Spring Security y JWT.
 - Biblioteca personal completa, con filtros por estado y orden por nombre, rating, horas o favoritos.
 - Visualización de juegos recientes.
 - Catálogo global de videojuegos.
@@ -60,6 +61,7 @@ Algunas funcionalidades todavía se encuentran en desarrollo.
 
 - Java
 - Spring Boot
+- Spring Security
 - Spring Data JPA
 - REST API
 - Jakarta Validation
@@ -115,9 +117,7 @@ También lo uso como proyecto de portfolio para demostrar evolución técnica, c
 
 ## 🔜 Próximos pasos
 
-- Implementar el detalle de videojuego y su acceso desde la biblioteca.
-- Mejorar el sistema de autenticación.
-- Incorporar autenticación con Spring Security y JWT.
+- Mejorar autorización por usuario en endpoints protegidos.
 - Permitir creación manual de videojuegos cuando no existan en el catálogo.
 - Mejorar la integración con Steam.
 - Permitir agregar juegos de IGDB y enriquecer juegos manuales.

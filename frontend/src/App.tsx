@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import { login, register, UserResponse } from "./api";
+import { AuthResponse, login, register, setAuthToken, UserResponse } from "./api";
 import GameDetailPage from "./GameDetailPage";
 import HomePage from "./HomePage";
 import LibraryPage from "./LibraryPage";
@@ -25,10 +25,19 @@ const initialForm: FormState = {
 
 const SESSION_STORAGE_KEY = "gamehub.user";
 
+type StoredSession = {
+  token: string;
+  user: UserResponse;
+};
+
 function App() {
   const [mode, setMode] = useState<AuthMode>("login");
   const [form, setForm] = useState<FormState>(initialForm);
-  const [user, setUser] = useState<UserResponse | null>(() => readStoredUser());
+  const [user, setUser] = useState<UserResponse | null>(() => {
+    const storedSession = readStoredSession();
+    setAuthToken(storedSession?.token ?? null);
+    return storedSession?.user ?? null;
+  });
   const [screen, setScreen] = useState<AppScreen>("home");
   const [selectedGameId, setSelectedGameId] = useState<number | null>(null);
   const [error, setError] = useState("");
@@ -54,12 +63,18 @@ function App() {
     setIsSubmitting(true);
 
     try {
-      const response = isLogin
-        ? await login(form.email, form.password)
-        : await register(form.username, form.email, form.password);
+      let response: AuthResponse;
 
-      setUser(response);
-      storeUser(response);
+      if (isLogin) {
+        response = await login(form.email, form.password);
+      } else {
+        await register(form.username, form.email, form.password);
+        response = await login(form.email, form.password);
+      }
+
+      setAuthToken(response.token);
+      setUser(response.user);
+      storeSession(response);
       setScreen("home");
       setSelectedGameId(null);
       setForm(initialForm);
@@ -77,7 +92,8 @@ function App() {
     }
 
     function logout() {
-      clearStoredUser();
+      clearStoredSession();
+      setAuthToken(null);
       setUser(null);
       setSelectedGameId(null);
       setScreen("home");
@@ -265,7 +281,7 @@ function App() {
   );
 }
 
-function readStoredUser() {
+function readStoredSession() {
   const storedValue = window.localStorage.getItem(SESSION_STORAGE_KEY);
 
   if (!storedValue) {
@@ -273,12 +289,13 @@ function readStoredUser() {
   }
 
   try {
-    const parsedValue = JSON.parse(storedValue) as UserResponse;
+    const parsedValue = JSON.parse(storedValue) as StoredSession;
 
     if (
-      typeof parsedValue.id === "number"
-      && typeof parsedValue.username === "string"
-      && typeof parsedValue.email === "string"
+      typeof parsedValue.token === "string"
+      && typeof parsedValue.user?.id === "number"
+      && typeof parsedValue.user.username === "string"
+      && typeof parsedValue.user.email === "string"
     ) {
       return parsedValue;
     }
@@ -289,11 +306,11 @@ function readStoredUser() {
   return null;
 }
 
-function storeUser(user: UserResponse) {
-  window.localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(user));
+function storeSession(response: AuthResponse) {
+  window.localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(response));
 }
 
-function clearStoredUser() {
+function clearStoredSession() {
   window.localStorage.removeItem(SESSION_STORAGE_KEY);
 }
 
