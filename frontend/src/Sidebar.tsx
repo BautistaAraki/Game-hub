@@ -12,7 +12,8 @@ const navItems: Array<{ label: string; screen: AppScreen }> = [
   { label: "Home", screen: "home" },
   { label: "Biblioteca", screen: "library" },
   { label: "Buscar", screen: "search" },
-  { label: "Estadisticas", screen: "stats" }
+  { label: "Estadisticas", screen: "stats" },
+  { label: "Perfil", screen: "profile" }
 ];
 
 function Sidebar({ activeScreen, user, onLogout, onNavigate }: SidebarProps) {

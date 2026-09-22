@@ -4,6 +4,7 @@ import GameDetailPage from "./GameDetailPage";
 import HomePage from "./HomePage";
 import LibraryPage from "./LibraryPage";
 import { AppScreen } from "./navigation";
+import ProfilePage from "./ProfilePage";
 import SearchPage from "./SearchPage";
 import StatsPage from "./StatsPage";
 
@@ -111,6 +112,18 @@ function App() {
           activeScreen={screen}
           onLogout={logout}
           onNavigate={setScreen}
+          user={user}
+        />
+      );
+    }
+
+    if (screen === "profile") {
+      return (
+        <ProfilePage
+          activeScreen={screen}
+          onLogout={logout}
+          onNavigate={setScreen}
+          onOpenGame={openGameDetail}
           user={user}
         />
       );
