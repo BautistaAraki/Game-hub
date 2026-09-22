@@ -28,7 +28,7 @@ Pantalla para gestionar la biblioteca personal de videojuegos.
 
 ### Búsqueda de videojuegos
 
-Pantalla para buscar juegos en el catálogo local y, próximamente, mediante APIs externas como RAWG.
+Pantalla para buscar juegos en el catálogo local y en IGDB.
 
 ### Detalle de videojuego
 
@@ -39,12 +39,14 @@ Pantalla para visualizar información global del juego y datos personales del us
 ## 🚀 Funcionalidades
 
 - Registro e inicio de sesión de usuarios.
-- Biblioteca personal de videojuegos.
+- Biblioteca personal completa, con filtros por estado y orden por nombre, rating, horas o favoritos.
 - Visualización de juegos recientes.
 - Catálogo global de videojuegos.
 - Búsqueda y organización de juegos.
 - Integración inicial con Steam.
-- Integración inicial con RAWG para búsqueda externa de videojuegos.
+- Búsqueda externa con IGDB (Twitch), con catálogo local disponible si el proveedor falla.
+- [Configurar credenciales de IGDB](docs/igdb-setup.md).
+- Endpoint RAWG conservado por compatibilidad.
 - Seguimiento de horas jugadas.
 - Estadísticas del usuario.
 - Sistema de favoritos.
@@ -113,12 +115,12 @@ También lo uso como proyecto de portfolio para demostrar evolución técnica, c
 
 ## 🔜 Próximos pasos
 
-- Continuar desarrollando las funcionalidades de biblioteca y detalle de videojuego.
+- Implementar el detalle de videojuego y su acceso desde la biblioteca.
 - Mejorar el sistema de autenticación.
 - Incorporar autenticación con Spring Security y JWT.
 - Permitir creación manual de videojuegos cuando no existan en el catálogo.
 - Mejorar la integración con Steam.
-- Completar la integración con RAWG para enriquecer datos e imágenes de videojuegos.
+- Permitir agregar juegos de IGDB y enriquecer juegos manuales.
 - Agregar más tests de servicios y controllers.
 - Mejorar la experiencia de usuario y el diseño responsive.
 

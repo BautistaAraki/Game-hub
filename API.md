@@ -8,12 +8,14 @@ http://localhost:8080
 
 ## Variables de entorno
 
-La aplicacion necesita estas variables cuando corre contra MySQL, Steam y/o RAWG:
+La aplicacion necesita estas variables cuando corre contra MySQL, Steam, RAWG y/o IGDB:
 
 ```powershell
 $env:DB_PASSWORD="..."
 $env:STEAM_API_KEY="..."
 $env:RAWG_API_KEY="..."
+$env:IGDB_CLIENT_ID="..."
+$env:IGDB_CLIENT_SECRET="..."
 ```
 
 No guardar estos valores en Git.
@@ -361,3 +363,49 @@ Invoke-WebRequest -Method Post -Uri "http://localhost:8080/api/library" -Content
 ```
 
 El caso `rating=15` debe devolver `400` y no debe modificar el rating anterior.
+
+## Busqueda externa de videojuegos
+
+`GET /api/external-games/search?query=minecraft`
+
+Es el flujo usado por la pantalla Buscar para consultar un proveedor externo. Actualmente el proveedor configurado es IGDB. Requiere `IGDB_CLIENT_ID` y `IGDB_CLIENT_SECRET` en el backend. Configuracion: [guia IGDB](docs/igdb-setup.md).
+
+Respuesta 200:
+
+```json
+[
+  {
+    "source": "IGDB",
+    "externalId": "121",
+    "title": "Minecraft",
+    "description": "Juego de construccion y supervivencia.",
+    "imageUrl": null,
+    "releaseDate": "2011-11-18",
+    "platforms": ["PC", "Xbox One"]
+  }
+]
+```
+
+`imageUrl`, `description`, `releaseDate` y `platforms` pueden venir vacios o null segun el proveedor. Una busqueda sin coincidencias devuelve `[]`. Query obligatorio: entrada invalida devuelve 400. Credenciales ausentes, errores de Twitch/IGDB o limites del proveedor devuelven 502 con `ApiErrorResponse`.
+
+### Agregar resultado externo a biblioteca
+
+```http
+POST /api/external-games/library
+Content-Type: application/json
+```
+
+```json
+{
+  "userId": 1,
+  "source": "IGDB",
+  "externalId": "121",
+  "title": "Minecraft",
+  "imageUrl": "https://...",
+  "description": "Juego de construccion y supervivencia.",
+  "releaseDate": "2011-11-18",
+  "platforms": ["PC", "Xbox One"]
+}
+```
+
+Este endpoint crea o reutiliza el `Game` global, vincula `source + externalId` mediante `ExternalGameId` para evitar duplicados y crea el `UserGame` en la biblioteca del usuario. El endpoint RAWG anterior sigue disponible por compatibilidad.

@@ -55,6 +55,9 @@ public class UserGameService {
 
     @Transactional(readOnly = true)
     public List<UserGameResponse> getLibrary(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new ResourceNotFoundException("Usuario no encontrado");
+        }
         return userGameRepository.findByUser_Id(userId)
                 .stream()
                 .map(this::toResponse)

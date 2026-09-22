@@ -29,6 +29,20 @@ class UserGameServiceTest {
     );
 
     @Test
+    void missingUserIsNotAnEmptyLibrary() {
+        assertThrows(com.gamehub.gamehub.exception.ResourceNotFoundException.class,
+                () -> userGameService.getLibrary(99L));
+        verify(userGameRepository, never()).findByUser_Id(99L);
+    }
+
+    @Test
+    void existingUserCanHaveEmptyLibrary() {
+        when(userRepository.existsById(1L)).thenReturn(true);
+        when(userGameRepository.findByUser_Id(1L)).thenReturn(java.util.List.of());
+        assertEquals(java.util.List.of(), userGameService.getLibrary(1L));
+    }
+
+    @Test
     void updateRatingRejectsInvalidRatingAndDoesNotSave() {
         UserGame userGame = new UserGame(
                 new User("bauti", "bauti@example.com", "hash"),
