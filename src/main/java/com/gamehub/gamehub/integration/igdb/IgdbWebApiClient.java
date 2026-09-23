@@ -68,8 +68,10 @@ public class IgdbWebApiClient implements ExternalGameClient {
     private String buildSearchBody(String query) {
         return """
                 search "%s";
-                fields name,summary,first_release_date,cover.url,platforms.name;
-                where version_parent = null;
+                fields name,summary,first_release_date,cover.url,platforms.name,category,parent_game,version_parent;
+                where version_parent = null
+                    & parent_game = null
+                    & category = (0,4,8,9,10);
                 limit 12;
                 """.formatted(escapeQuery(query));
     }
