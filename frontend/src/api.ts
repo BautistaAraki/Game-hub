@@ -46,6 +46,13 @@ export type LibraryStatsResponse = {
   totalPlaytimeHours: number;
 };
 
+export type UserExternalAccountResponse = {
+  id: number;
+  userId: number;
+  platform: "STEAM" | "IGDB";
+  externalUserId: string;
+};
+
 export type ExternalGameSearchResponse = {
   source: string;
   externalId: string;
@@ -126,6 +133,13 @@ export function getUserLibrary() {
 
 export function getLibraryStats() {
   return request<LibraryStatsResponse>("/api/library/me/stats");
+}
+
+export function linkSteamAccount(steamId: string) {
+  return request<UserExternalAccountResponse>("/api/me/external-accounts/steam", {
+    method: "POST",
+    body: JSON.stringify({ steamId: steamId.trim() })
+  });
 }
 
 export function searchExternalGames(query: string, signal?: AbortSignal) {
